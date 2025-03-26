@@ -1,0 +1,26 @@
+<div class="course-details" *ngIf="course">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ course.title }}</mat-card-title>
+        <mat-card-subtitle>{{ course.description }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Video URL:</strong> <a [href]="course.videoUrl" target="_blank">Watch Video</a></p>
+        <p><strong>PDF:</strong> <button mat-button (click)="downloadPdf()">Download PDF</button></p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/student">Back to Courses</button>
+      </mat-card-actions>
+    </mat-card>
+  
+    <div class="comment-section">
+      <h2>Comments</h2>
+      <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()">
+        <mat-form-field appearance="outline">
+          <mat-label>Add a comment</mat-label>
+          <textarea matInput formControlName="comment" placeholder="Your comment"></textarea>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Post Comment</button>
+      </form>
+    </div>
+  </div>

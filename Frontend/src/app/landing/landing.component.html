@@ -1,0 +1,49 @@
+<div class="landing-container" [ngClass]="{'dark-mode': isDarkMode}">
+    <!-- Dark Mode Toggle Button -->
+    <div class="dark-mode-toggle">
+      <button mat-icon-button (click)="toggleDarkMode()">
+        <mat-icon>{{ isDarkMode ? '!' : 'o' }}</mat-icon>
+      </button>
+    </div>
+  
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Welcome to <span class="highlight">Learnova</span></h1>
+          <p class="subtitle">Your online e-learning platform for mastering new skills.</p>
+          <div class="cta-buttons">
+            <button mat-raised-button color="primary" routerLink="/login">Login</button>
+            <button mat-raised-button color="accent" routerLink="/signup">Sign Up</button>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80" alt="Students learning together" />
+        </div>
+      </div>
+    </section>
+  
+    <!-- Features Section -->
+    <section class="features-section">
+      <h2>Why Choose Learnova?</h2>
+      <div class="features-grid">
+        <div *ngFor="let feature of features" class="feature-card">
+          <div class="icon">{{ feature.icon }}</div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </section>
+  
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-content">
+        <h2>Ready to Start Learning?</h2>
+        <p>Join thousands of students and unlock your potential today.</p>
+        <div class="cta-buttons">
+          <button mat-raised-button color="primary" routerLink="/signup">Get Started</button>
+          <button mat-raised-button color="accent" routerLink="/courses">Explore Courses</button>
+        </div>
+      </div>
+    </section>
+  </div>

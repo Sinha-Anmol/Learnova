@@ -1,0 +1,47 @@
+<div class="login-container">
+    <mat-card class="login-card">
+      <div class="logo">
+        <span class="logo-text">Learnova</span>
+      </div>
+      <h2>Login to Your Account</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required />
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            Valid email is required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" required />
+          <mat-icon matSuffix>lock</mat-icon>
+          <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            Password is required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Select Role</mat-label>
+          <mat-select formControlName="role" required>
+            <mat-option value="Student">Student</mat-option>
+            <mat-option value="Teacher">Teacher</mat-option>
+          </mat-select>
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="loginForm.get('role')?.invalid && loginForm.get('role')?.touched">
+            Please select a role
+          </mat-error>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+          Login
+        </button>
+  
+        <p class="signup-text">
+          Don't have an account? <a routerLink="/signup">Sign up</a>
+        </p>
+      </form>
+    </mat-card>
+  </div>

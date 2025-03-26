@@ -1,0 +1,13 @@
+.quiz-container {
+    padding: 2rem;
+  
+    mat-card {
+      margin-bottom: 2rem;
+    }
+  
+    mat-radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
