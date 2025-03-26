@@ -40,7 +40,6 @@ logs
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 bin/
 obj/
 *.user
