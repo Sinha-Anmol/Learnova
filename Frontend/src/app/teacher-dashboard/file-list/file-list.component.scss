@@ -1,0 +1,36 @@
+.file-list-container {
+    position: relative;
+    min-height: 200px;
+  }
+  
+  table {
+    width: 100%;
+    background: white;
+  }
+  
+  th {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: bold;
+  }
+  
+  td {
+    padding: 8px 16px;
+  }
+  
+  .description-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  mat-icon {
+    vertical-align: middle;
+    margin-right: 8px;
+    color: #3f51b5;
+  }
+  
+  .loading-spinner {
+    margin: 20px auto;
+  }

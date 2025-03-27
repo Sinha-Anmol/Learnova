@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Updated MultimediaFile.cs
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduPortalAPI.Models
 {
@@ -14,8 +16,15 @@ namespace EduPortalAPI.Models
         public string FileType { get; set; }
 
         [Required]
-        public byte[] FileData { get; set; } // Stores the file as a byte array
+        public byte[] FileData { get; set; }
 
         public DateTime UploadedOn { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        [MaxLength(500)]
+        public string ShortDescription { get; set; }
+
+        [Required]
+        public string UploadedBy { get; set; } // Email of the uploader
     }
 }

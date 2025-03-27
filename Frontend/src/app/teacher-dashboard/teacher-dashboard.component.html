@@ -1,1 +1,53 @@
-<p>teacher-dashboard works!</p>
+<div class="dashboard-container">
+    <mat-toolbar color="primary" class="dashboard-toolbar">
+      <span>Teacher Dashboard</span>
+      <span class="spacer"></span>
+      <button mat-icon-button>
+        <mat-icon>notifications</mat-icon>
+      </button>
+    </mat-toolbar>
+  
+    <div class="dashboard-content">
+      <div class="stats-section">
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">school</mat-icon>
+          <div class="stat-value">{{ stats.courses }}</div>
+          <div class="stat-label">Courses</div>
+        </mat-card>
+  
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">people</mat-icon>
+          <div class="stat-value">{{ stats.students }}</div>
+          <div class="stat-label">Students</div>
+        </mat-card>
+  
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">folder</mat-icon>
+          <div class="stat-value">{{ stats.files }}</div>
+          <div class="stat-label">Files</div>
+        </mat-card>
+      </div>
+  
+      <div class="actions-section">
+        <mat-card class="action-card">
+          <h3>Upload Materials</h3>
+          <div class="action-buttons">
+            <button mat-raised-button routerLink="upload-video">
+                <mat-icon>video_library</mat-icon> Upload Video
+              </button>
+              
+              <button mat-raised-button routerLink="upload-pdf">
+                <mat-icon>picture_as_pdf</mat-icon> Upload PDF
+              </button>
+          </div>
+        </mat-card>
+      </div>
+  
+      <div class="recent-files">
+        <mat-card>
+          <h3>Recent Files</h3>
+          <app-file-list></app-file-list>
+        </mat-card>
+      </div>
+    </div>
+  </div>

@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar } from '@angular/material/snack-bar'; // For showing error messages
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar'; // For showing error 
     MatCardModule,
     MatSelectModule,
     HttpClientModule,
+    MatSnackBarModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -33,12 +34,12 @@ export class LoginComponent {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private snackBar: MatSnackBar // For showing error messages
+    private snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      role: ['', Validators.required], // Role selection field
+      role: ['', Validators.required],
     });
   }
 
@@ -48,17 +49,18 @@ export class LoginComponent {
 
       this.http.post<{ token: string }>(this.apiUrl, credentials).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
           localStorage.setItem('authToken', response.token);
-
+          
+          // Decode the token to get the role
           const decodedToken = this.decodeJwt(response.token);
           const userRole = decodedToken?.role;
-
-          // Ensure selected role matches the one in the token
-          if (userRole === credentials.role) {
-            this.router.navigate([`/${userRole.toLowerCase()}-dashboard`]); // Redirect to role-specific dashboard
+          
+          // Check if the selected role matches the token role
+          if (userRole && userRole.toLowerCase() === credentials.role.toLowerCase()) {
+            // Redirect based on role
+            this.router.navigate([`/${userRole.toLowerCase()}`]);
           } else {
-            this.showError('Selected role does not match our records.');
+            this.showError('Selected role does not match your account role.');
           }
         },
         error: (error) => {
@@ -74,7 +76,9 @@ export class LoginComponent {
   private decodeJwt(token: string): any {
     try {
       const payload = token.split('.')[1];
-      return JSON.parse(atob(payload));
+      const decoded = JSON.parse(atob(payload));
+      console.log('Decoded token:', decoded); // For debugging
+      return decoded;
     } catch (error) {
       console.error('Failed to decode token:', error);
       return null;
@@ -83,8 +87,8 @@ export class LoginComponent {
 
   private showError(message: string) {
     this.snackBar.open(message, 'Close', {
-      duration: 5000, // Show error for 5 seconds
-      panelClass: ['error-snackbar'], // Custom style for error messages
+      duration: 5000,
+      panelClass: ['error-snackbar'],
     });
   }
 }

@@ -1,0 +1,41 @@
+<mat-card class="upload-card">
+    <h2>Upload {{ fileType === 'video' ? 'Video' : 'PDF' }}</h2>
+    
+    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="3" required></textarea>
+        <mat-error *ngIf="uploadForm.get('description')?.errors?.['required']">
+          Description is required
+        </mat-error>
+      </mat-form-field>
+  
+      <div class="file-upload-section">
+        <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="{{ fileType === 'video' ? 'video/*' : '.pdf' }}" hidden>
+        <label for="fileInput">
+          <button mat-raised-button color="primary" type="button">
+            <mat-icon>cloud_upload</mat-icon> Select File
+          </button>
+        </label>
+        <span class="file-name">{{ selectedFile?.name || 'No file selected' }}</span>
+      </div>
+  
+      <div class="actions">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit" 
+          [disabled]="!uploadForm.valid || !selectedFile || isLoading"
+        >
+          <span *ngIf="!isLoading">Upload {{ fileType === 'video' ? 'Video' : 'PDF' }}</span>
+          <span *ngIf="isLoading">
+            <mat-spinner diameter="20"></mat-spinner>
+            Uploading...
+          </span>
+        </button>
+        <button mat-button type="button" (click)="router.navigate(['/teacher'])" [disabled]="isLoading">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </mat-card>
