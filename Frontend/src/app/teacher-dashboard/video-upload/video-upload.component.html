@@ -1,1 +1,16 @@
-<p>video-upload works!</p>
+<div class="upload-container">
+    <h2>Upload Video</h2>
+  
+    <form [formGroup]="uploadForm" (ngSubmit)="uploadVideo()">
+      <label>Select Video File:</label>
+      <input type="file" (change)="onFileSelected($event)" accept="video/*" />
+  
+      <label>Short Description:</label>
+      <textarea formControlName="shortDescription" rows="3"></textarea>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="isUploading">
+        {{ isUploading ? 'Uploading...' : 'Upload' }}
+      </button>
+    </form>
+  </div>
+  

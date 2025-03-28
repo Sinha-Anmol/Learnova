@@ -49,7 +49,7 @@ export class SignupComponent {
         FullName: this.signupForm.value.fullName,
         Email: this.signupForm.value.email,
         Password: this.signupForm.value.password,
-        Role: this.signupForm.value.role,
+        Role: this.signupForm.value.role.toLowerCase(),
       };
 
       // Call the backend API to register the user

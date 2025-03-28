@@ -8,6 +8,10 @@ import { StudentDashboardComponent } from './student-dashboard/student-dashboard
 import { RoleGuard } from './role.guard';
 import { PdfUploadComponent } from './teacher-dashboard/pdf-upload/pdf-upload.component';
 import { VideoUploadComponent } from './teacher-dashboard/video-upload/video-upload.component';
+import { VideoListComponent } from './student-dashboard/video-list/video-list.component';
+import { PdfListComponent } from './student-dashboard/pdf-list/pdf-list.component';
+import { CommentSectionComponent } from './student-dashboard/comment-section/comment-section.component';
+
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
@@ -17,16 +21,18 @@ export const routes: Routes = [
     component: TeacherDashboardComponent,
     canActivate: [RoleGuard],
     data: { role: 'Teacher' },
-    children: [
-      { path: 'upload-video', component: VideoUploadComponent },
-      { path: 'upload-pdf', component: PdfUploadComponent }
-    ]
   },
+  { path: 'teacher/pdf-upload', component: PdfUploadComponent },
+  { path: 'teacher/video-upload', component: VideoUploadComponent },
   {
     path: 'student',
     component: StudentDashboardComponent,
     canActivate: [RoleGuard],
-    data: { role: 'Student' }
+    data: { role: 'student' }
   },
+  { path: 'student-dashboard', component: StudentDashboardComponent },
+  { path: 'student-dashboard/videos', component: VideoListComponent },
+  { path: 'student-dashboard/pdfs', component: PdfListComponent },
+  { path: '', redirectTo: 'student-dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '' }
 ];

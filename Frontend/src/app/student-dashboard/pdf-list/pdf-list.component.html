@@ -1,0 +1,39 @@
+<div class="pdf-container">
+  <h1>PDF Resources</h1>
+  
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Loading PDFs...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error_outline</mat-icon>
+    <p>Failed to load PDFs. Please try again later.</p>
+  </div>
+
+  <div *ngIf="!loading && !error" class="pdf-grid">
+    <mat-card *ngFor="let pdf of pdfs" class="pdf-card">
+      <div class="thumbnail-container">
+        <img [src]="pdf.thumbnail" alt="PDF thumbnail" class="thumbnail">
+      </div>
+      
+      <mat-card-content>
+        <h3>{{ pdf.fileName }}</h3>
+        <p class="description">{{ pdf.shortDescription || 'No description available' }}</p>
+        <p class="meta">
+          <span><mat-icon>insert_drive_file</mat-icon> {{ (pdf.fileSize / 1024).toFixed(2) }} KB</span>
+          <span><mat-icon>calendar_today</mat-icon> {{ pdf.uploadedOn | date }}</span>
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="downloadPdf(pdf)">
+          <mat-icon>download</mat-icon> Download
+        </button>
+        <button mat-button color="accent" (click)="viewPdf(pdf)">
+          <mat-icon>visibility</mat-icon> View
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

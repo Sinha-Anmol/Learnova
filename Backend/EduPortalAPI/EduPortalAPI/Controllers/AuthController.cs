@@ -50,7 +50,11 @@ public class AuthController : ControllerBase
         }
 
         var token = GenerateJwtToken(dbUser);
-        return Ok(new { token });
+        return Ok(new
+        {
+            token,
+            email = dbUser.Email
+        });
     }
 
     private string GenerateJwtToken(User user)

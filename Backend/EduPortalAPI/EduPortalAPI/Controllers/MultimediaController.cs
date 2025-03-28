@@ -29,8 +29,23 @@ namespace EduPortalAPI.Controllers
 
         private string GetUserEmail()
         {
-            return User.FindFirstValue(ClaimTypes.Email) ?? throw new InvalidOperationException("User email not found");
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null || !identity.IsAuthenticated)
+            {
+                throw new InvalidOperationException("User is not authenticated.");
+            }
+
+            var emailClaim = identity.FindFirst(ClaimTypes.Email) ?? identity.FindFirst(ClaimTypes.Name); // Try both
+
+            if (emailClaim == null)
+            {
+                throw new InvalidOperationException("User email not found");
+            }
+
+            return emailClaim.Value;
         }
+
 
         [HttpPost("upload-video")]
         public async Task<IActionResult> UploadVideo(IFormFile file, [FromForm] string shortDescription)
@@ -112,10 +127,12 @@ namespace EduPortalAPI.Controllers
             });
         }
 
-        [HttpGet("my-files")]
-        public IActionResult GetMyFiles()
+        [HttpGet("user-files")]
+        public IActionResult GetUserFiles([FromQuery] string? email = null)
         {
-            var userEmail = GetUserEmail();
+            // If no email is provided, use the logged-in user's email
+            var userEmail = string.IsNullOrWhiteSpace(email) ? GetUserEmail() : email;
+
             var files = _context.MultimediaFiles
                 .Where(f => f.UploadedBy == userEmail)
                 .OrderByDescending(f => f.UploadedOn)
@@ -140,6 +157,26 @@ namespace EduPortalAPI.Controllers
                 return NotFound("File not found or unauthorized.");
 
             return File(file.FileData, file.FileType, file.FileName);
+        }
+
+        [HttpGet("all-files")]
+        [AllowAnonymous]  // Ensure it allows any authenticated user
+        public IActionResult GetAllFiles()
+        {
+            var files = _context.MultimediaFiles
+                .OrderByDescending(f => f.UploadedOn)
+                .Select(f => new {
+                    f.Id,
+                    f.FileName,
+                    f.FileType,
+                    f.ShortDescription,
+                    f.UploadedOn,
+                    FileSize = f.FileData.Length,
+                    FileData = Convert.ToBase64String(f.FileData) // Encode for inline display
+                })
+                .ToList();
+
+            return Ok(files);
         }
     }
 }

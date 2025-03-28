@@ -1,0 +1,7 @@
+<h2>Comments</h2>
+<textarea [(ngModel)]="newComment" placeholder="Write your comment here..."></textarea>
+<button (click)="postComment()">Post Comment</button>
+
+<ul>
+  <li *ngFor="let comment of comments">{{ comment.text }}</li>
+</ul>

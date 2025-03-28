@@ -1,4 +1,84 @@
 <div class="dashboard-container">
-    <h1>Student Dashboard</h1>
-    <router-outlet></router-outlet>
+  <!-- Header Section -->
+  <header class="dashboard-header">
+    <h1>Welcome Back, Student!</h1>
+    <button mat-icon-button>
+      <mat-icon>notifications</mat-icon>
+    </button>
+  </header>
+
+  <!-- Quick Stats -->
+  <div class="stats-section">
+    <div class="stat-card">
+      <mat-icon>play_circle</mat-icon>
+      <div>
+        <h3>Videos Watched</h3>
+        <p>24/50</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon>assignment</mat-icon>
+      <div>
+        <h3>PDFs Completed</h3>
+        <p>12/30</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon>schedule</mat-icon>
+      <div>
+        <h3>Learning Hours</h3>
+        <p>18.5</p>
+      </div>
+    </div>
   </div>
+
+  <!-- Main Content -->
+  <div class="content-section">
+    <!-- Resources Section -->
+    <section class="resources-section">
+      <h2>Your Learning Resources</h2>
+      <div class="resource-cards">
+        <mat-card (click)="openVideosPage()">
+          <mat-card-header>
+            <div mat-card-avatar>
+              <mat-icon>ondemand_video</mat-icon>
+            </div>
+            <mat-card-title>Video Library</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Access all your course videos</p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card (click)="openPdfsPage()">
+          <mat-card-header>
+            <div mat-card-avatar>
+              <mat-icon>picture_as_pdf</mat-icon>
+            </div>
+            <mat-card-title>PDF Resources</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Download study materials</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="activity-section">
+      <h2>Recent Activity</h2>
+      <mat-list>
+        <mat-list-item>
+          <mat-icon mat-list-icon>play_circle</mat-icon>
+          <div mat-line>Completed "Introduction to Angular" video</div>
+          <div mat-line>2 hours ago</div>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon mat-list-icon>picture_as_pdf</mat-icon>
+          <div mat-line>Downloaded "JavaScript Basics" PDF</div>
+          <div mat-line>1 day ago</div>
+        </mat-list-item>
+      </mat-list>
+    </section>
+  </div>
+</div>
