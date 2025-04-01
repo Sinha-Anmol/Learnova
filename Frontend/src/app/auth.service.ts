@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:7030/api/auth'; // Replace with your backend API URL
+  private apiUrl = 'https://learnova-production.up.railway.app/api/auth'; // Replace with your backend API URL
 
   constructor(private http: HttpClient, private router: Router) {}
 

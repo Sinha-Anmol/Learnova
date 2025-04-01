@@ -53,7 +53,7 @@ export class SignupComponent {
       };
 
       // Call the backend API to register the user
-      this.http.post<any>('http://localhost:7030/api/auth/register', user).subscribe({
+      this.http.post<any>('https://learnova-production.up.railway.app/api/auth/register', user).subscribe({
         next: (response) => {
           console.log('Registration successful:', response);
           this.successMessage = 'Registration successful! Redirecting to login...';
