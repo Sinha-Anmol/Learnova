@@ -1,28 +1,32 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-pdf-upload',
-  imports: [ReactiveFormsModule],
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './pdf-upload.component.html',
-  styleUrls: ['./pdf-upload.component.scss'],
+  styleUrls: ['./pdf-upload.component.scss']
 })
 export class PdfUploadComponent {
   uploadForm: FormGroup;
   isUploading = false;
+  
+  domains = ['FullStack', 'Frontend', 'Backend', 'DevOps', 'QualityAssurance', 'Cloud'];
+  levels = ['Beginner', 'Intermediate', 'Advanced'];
 
   constructor(
     private http: HttpClient,
-    private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private fb: FormBuilder
   ) {
     this.uploadForm = this.fb.group({
       file: [null, Validators.required],
-      shortDescription: ['', [Validators.required, Validators.maxLength(500)]]
+      shortDescription: ['', [Validators.required, Validators.maxLength(500)]],
+      domain: ['', Validators.required],
+      level: ['', Validators.required]
     });
   }
 
@@ -30,42 +34,44 @@ export class PdfUploadComponent {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
       this.uploadForm.patchValue({ file });
+      this.uploadForm.get('file')?.updateValueAndValidity();
     } else {
-      this.snackBar.open('Please select a valid PDF file.', 'Close', { duration: 3000 });
-      event.target.value = ''; // Reset file input
+      alert('Please select a valid PDF file');
+      event.target.value = '';
     }
   }
 
   uploadPdf() {
     if (this.uploadForm.invalid) {
-      this.snackBar.open('Please select a valid PDF file and enter a description.', 'Close', { duration: 3000 });
+      alert('Please fill all required fields correctly');
       return;
     }
   
     const formData = new FormData();
     formData.append('file', this.uploadForm.value.file);
     formData.append('shortDescription', this.uploadForm.value.shortDescription);
+    formData.append('domain', this.uploadForm.value.domain);
+    formData.append('level', this.uploadForm.value.level);
   
-    const token = localStorage.getItem('authToken'); // ✅ Correct token retrieval
-  
+    const token = localStorage.getItem('authToken');
     if (!token) {
-      this.snackBar.open('Unauthorized: Please log in again.', 'Close', { duration: 3000 });
+      alert('Please log in again');
       return;
     }
   
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // ✅ Correct token usage
+      Authorization: `Bearer ${token}`,
     });
   
     this.isUploading = true;
     this.http.post('https://localhost:7030/api/Multimedia/upload-pdf', formData, { headers }).subscribe({
       next: () => {
-        this.snackBar.open('PDF uploaded successfully!', 'Close', { duration: 3000 });
+        alert('PDF uploaded successfully!');
         this.uploadForm.reset();
       },
       error: (error) => {
         console.error('Upload error:', error);
-        this.snackBar.open('Upload failed: ' + (error.error?.message || 'Unauthorized'), 'Close', { duration: 3000 });
+        alert('Upload failed: ' + (error.error?.message || 'Server error'));
       },
       complete: () => (this.isUploading = false),
     });

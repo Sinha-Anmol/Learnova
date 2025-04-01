@@ -10,7 +10,7 @@ import { PdfUploadComponent } from './teacher-dashboard/pdf-upload/pdf-upload.co
 import { VideoUploadComponent } from './teacher-dashboard/video-upload/video-upload.component';
 import { VideoListComponent } from './student-dashboard/video-list/video-list.component';
 import { PdfListComponent } from './student-dashboard/pdf-list/pdf-list.component';
-import { CommentSectionComponent } from './student-dashboard/comment-section/comment-section.component';
+import { ContentListComponent } from './student-dashboard/content-list/content-list.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -33,6 +33,7 @@ export const routes: Routes = [
   { path: 'student-dashboard', component: StudentDashboardComponent },
   { path: 'student-dashboard/videos', component: VideoListComponent },
   { path: 'student-dashboard/pdfs', component: PdfListComponent },
+  { path: 'content-list', component: ContentListComponent },
   { path: '', redirectTo: 'student-dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '' }
 ];

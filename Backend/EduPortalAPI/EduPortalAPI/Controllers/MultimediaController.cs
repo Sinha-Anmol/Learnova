@@ -1,5 +1,4 @@
-﻿// Updated MultimediaController.cs
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -10,6 +9,7 @@ using EduPortalAPI.Data;
 using EduPortalAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduPortalAPI.Controllers
 {
@@ -36,8 +36,7 @@ namespace EduPortalAPI.Controllers
                 throw new InvalidOperationException("User is not authenticated.");
             }
 
-            var emailClaim = identity.FindFirst(ClaimTypes.Email) ?? identity.FindFirst(ClaimTypes.Name); // Try both
-
+            var emailClaim = identity.FindFirst(ClaimTypes.Email) ?? identity.FindFirst(ClaimTypes.Name);
             if (emailClaim == null)
             {
                 throw new InvalidOperationException("User email not found");
@@ -46,137 +45,293 @@ namespace EduPortalAPI.Controllers
             return emailClaim.Value;
         }
 
-
         [HttpPost("upload-video")]
-        public async Task<IActionResult> UploadVideo(IFormFile file, [FromForm] string shortDescription)
+        public async Task<IActionResult> UploadVideo(
+            IFormFile file,
+            [FromForm] string shortDescription,
+            [FromForm][Required] string domain,
+            [FromForm][Required] string level)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            if (string.IsNullOrWhiteSpace(shortDescription))
-                return BadRequest("Short description is required.");
-
-            var allowedExtensions = new[] { ".mp4", ".avi", ".mov" };
-            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!allowedExtensions.Contains(fileExtension))
-                return BadRequest("Invalid file type. Only video files are allowed.");
-
-            using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-
-            var multimediaFile = new MultimediaFile
+            try
             {
-                FileName = file.FileName,
-                FileType = file.ContentType,
-                FileData = memoryStream.ToArray(),
-                ShortDescription = shortDescription,
-                UploadedOn = DateTime.UtcNow,
-                UploadedBy = GetUserEmail() // Store uploader's email
-            };
+                // Validate domain and level
+                if (!Enum.TryParse<ContentDomain>(domain, out _))
+                    return BadRequest($"Invalid domain. Valid values: {string.Join(", ", Enum.GetNames<ContentDomain>())}");
 
-            _context.MultimediaFiles.Add(multimediaFile);
-            await _context.SaveChangesAsync();
+                if (!new[] { "Beginner", "Intermediate", "Advanced" }.Contains(level))
+                    return BadRequest("Level must be Beginner, Intermediate, or Advanced");
 
-            return Ok(new
+                // Existing file validation
+                if (file == null || file.Length == 0)
+                    return BadRequest("No file uploaded.");
+
+                if (string.IsNullOrWhiteSpace(shortDescription))
+                    return BadRequest("Short description is required.");
+
+                var allowedExtensions = new[] { ".mp4", ".avi", ".mov" };
+                var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!allowedExtensions.Contains(fileExtension))
+                    return BadRequest("Invalid file type. Only MP4, AVI, and MOV files are allowed.");
+
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+
+                var multimediaFile = new MultimediaFile
+                {
+                    FileName = file.FileName,
+                    FileType = file.ContentType,
+                    FileData = memoryStream.ToArray(),
+                    ShortDescription = shortDescription,
+                    UploadedOn = DateTime.UtcNow,
+                    UploadedBy = GetUserEmail(),
+                    Domain = domain,
+                    Level = level
+                };
+
+                _context.MultimediaFiles.Add(multimediaFile);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    multimediaFile.Id,
+                    message = "Video uploaded successfully",
+                    fileName = multimediaFile.FileName,
+                    description = multimediaFile.ShortDescription,
+                    domain = multimediaFile.Domain,
+                    level = multimediaFile.Level,
+                    uploadedOn = multimediaFile.UploadedOn
+                });
+            }
+            catch (Exception ex)
             {
-                multimediaFile.Id,
-                message = "Video uploaded successfully",
-                fileName = multimediaFile.FileName,
-                description = multimediaFile.ShortDescription,
-                uploadedOn = multimediaFile.UploadedOn
-            });
+                _logger.LogError(ex, "Error uploading video");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost("upload-pdf")]
-        public async Task<IActionResult> UploadPdf(IFormFile file, [FromForm] string shortDescription)
+        public async Task<IActionResult> UploadPdf(
+            IFormFile file,
+            [FromForm] string shortDescription,
+            [FromForm][Required] string domain,
+            [FromForm][Required] string level)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            if (string.IsNullOrWhiteSpace(shortDescription))
-                return BadRequest("Short description is required.");
-
-            var allowedExtensions = new[] { ".pdf" };
-            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!allowedExtensions.Contains(fileExtension))
-                return BadRequest("Invalid file type. Only PDF files are allowed.");
-
-            using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-
-            var multimediaFile = new MultimediaFile
+            try
             {
-                FileName = file.FileName,
-                FileType = file.ContentType,
-                FileData = memoryStream.ToArray(),
-                ShortDescription = shortDescription,
-                UploadedOn = DateTime.UtcNow,
-                UploadedBy = GetUserEmail() // Store uploader's email
-            };
+                // Validate domain and level
+                if (!Enum.TryParse<ContentDomain>(domain, out _))
+                    return BadRequest($"Invalid domain. Valid values: {string.Join(", ", Enum.GetNames<ContentDomain>())}");
 
-            _context.MultimediaFiles.Add(multimediaFile);
-            await _context.SaveChangesAsync();
+                if (!new[] { "Beginner", "Intermediate", "Advanced" }.Contains(level))
+                    return BadRequest("Level must be Beginner, Intermediate, or Advanced");
 
-            return Ok(new
+                if (file == null || file.Length == 0)
+                    return BadRequest("No file uploaded.");
+
+                if (string.IsNullOrWhiteSpace(shortDescription))
+                    return BadRequest("Short description is required.");
+
+                var allowedExtensions = new[] { ".pdf" };
+                var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!allowedExtensions.Contains(fileExtension))
+                    return BadRequest("Invalid file type. Only PDF files are allowed.");
+
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+
+                var multimediaFile = new MultimediaFile
+                {
+                    FileName = file.FileName,
+                    FileType = file.ContentType,
+                    FileData = memoryStream.ToArray(),
+                    ShortDescription = shortDescription,
+                    UploadedOn = DateTime.UtcNow,
+                    UploadedBy = GetUserEmail(),
+                    Domain = domain,
+                    Level = level
+                };
+
+                _context.MultimediaFiles.Add(multimediaFile);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    multimediaFile.Id,
+                    message = "PDF uploaded successfully",
+                    fileName = multimediaFile.FileName,
+                    description = multimediaFile.ShortDescription,
+                    domain = multimediaFile.Domain,
+                    level = multimediaFile.Level,
+                    uploadedOn = multimediaFile.UploadedOn
+                });
+            }
+            catch (Exception ex)
             {
-                multimediaFile.Id,
-                message = "PDF uploaded successfully",
-                fileName = multimediaFile.FileName,
-                description = multimediaFile.ShortDescription,
-                uploadedOn = multimediaFile.UploadedOn
-            });
+                _logger.LogError(ex, "Error uploading PDF");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("user-files")]
-        public IActionResult GetUserFiles([FromQuery] string? email = null)
+        public IActionResult GetUserFiles(
+            [FromQuery] string? email = null,
+            [FromQuery] string? domain = null,
+            [FromQuery] string? level = null)
         {
-            // If no email is provided, use the logged-in user's email
-            var userEmail = string.IsNullOrWhiteSpace(email) ? GetUserEmail() : email;
+            try
+            {
+                var userEmail = string.IsNullOrWhiteSpace(email) ? GetUserEmail() : email;
 
-            var files = _context.MultimediaFiles
-                .Where(f => f.UploadedBy == userEmail)
-                .OrderByDescending(f => f.UploadedOn)
-                .Select(f => new {
-                    f.Id,
-                    f.FileName,
-                    f.FileType,
-                    f.ShortDescription,
-                    f.UploadedOn,
-                    FileSize = f.FileData.Length
-                })
-                .ToList();
+                var query = _context.MultimediaFiles
+                    .Where(f => f.UploadedBy == userEmail);
 
-            return Ok(files);
+                if (!string.IsNullOrEmpty(domain))
+                    query = query.Where(f => f.Domain == domain);
+
+                if (!string.IsNullOrEmpty(level))
+                    query = query.Where(f => f.Level == level);
+
+                var files = query.OrderByDescending(f => f.UploadedOn)
+                    .Select(f => new {
+                        f.Id,
+                        f.FileName,
+                        f.FileType,
+                        f.ShortDescription,
+                        f.Domain,
+                        f.Level,
+                        f.UploadedOn,
+                        FileSize = f.FileData.Length
+                    })
+                    .ToList();
+
+                return Ok(files);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching user files");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("domain-files")]
+        public IActionResult GetFilesByDomain(
+            [FromQuery] string domain,
+            [FromQuery] string? level = null)
+        {
+            try
+            {
+                if (!Enum.TryParse<ContentDomain>(domain, out _))
+                    return BadRequest("Invalid domain");
+
+                var query = _context.MultimediaFiles
+                    .Where(f => f.Domain == domain);
+
+                if (!string.IsNullOrEmpty(level))
+                    query = query.Where(f => f.Level == level);
+
+                var files = query.OrderByDescending(f => f.UploadedOn)
+                    .Select(f => new {
+                        f.Id,
+                        f.FileName,
+                        f.FileType,
+                        f.ShortDescription,
+                        f.Level,
+                        f.UploadedOn,
+                        FileSize = f.FileData.Length
+                    })
+                    .ToList();
+
+                return Ok(files);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching domain files");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("progress")]
+        public IActionResult GetProgressAnalysis()
+        {
+            try
+            {
+                var progress = _context.MultimediaFiles
+                    .Where(f => f.UploadedBy == GetUserEmail())
+                    .GroupBy(f => new { f.Domain, f.Level })
+                    .Select(g => new {
+                        Domain = g.Key.Domain,
+                        Level = g.Key.Level,
+                        Count = g.Count(),
+                        LastAccessed = g.Max(f => f.UploadedOn)
+                    })
+                    .ToList();
+
+                return Ok(progress);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching progress data");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("download/{id}")]
         public async Task<IActionResult> DownloadFile(int id)
         {
-            var file = await _context.MultimediaFiles.FindAsync(id);
-            if (file == null || file.UploadedBy != GetUserEmail())
-                return NotFound("File not found or unauthorized.");
+            try
+            {
+                var file = await _context.MultimediaFiles.FindAsync(id);
+                if (file == null || file.UploadedBy != GetUserEmail())
+                    return NotFound("File not found or unauthorized");
 
-            return File(file.FileData, file.FileType, file.FileName);
+                return File(file.FileData, file.FileType, file.FileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error downloading file");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("all-files")]
-        [AllowAnonymous]  // Ensure it allows any authenticated user
+        [AllowAnonymous] // Completely open endpoint (no auth required)
         public IActionResult GetAllFiles()
         {
-            var files = _context.MultimediaFiles
-                .OrderByDescending(f => f.UploadedOn)
-                .Select(f => new {
-                    f.Id,
-                    f.FileName,
-                    f.FileType,
-                    f.ShortDescription,
-                    f.UploadedOn,
-                    FileSize = f.FileData.Length,
-                    FileData = Convert.ToBase64String(f.FileData) // Encode for inline display
-                })
-                .ToList();
+            try
+            {
+                // Get only essential file metadata without the actual file data
+                var files = _context.MultimediaFiles
+                    .OrderByDescending(f => f.UploadedOn)
+                    .Select(f => new {
+                        f.Id,
+                        f.FileName,
+                        f.FileType,
+                        f.ShortDescription,
+                        f.Domain,
+                        f.Level,
+                        f.UploadedOn,
+                        FileSize = f.FileData.Length,
+                       
+                    })
+                    .ToList();
 
-            return Ok(files);
+                return Ok(files);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all files");
+                return StatusCode(500, "Internal server error");
+            }
         }
+    }
+
+    public enum ContentDomain
+    {
+        FullStack,
+        Frontend,
+        Backend,
+        DevOps,
+        QualityAssurance,
+        Cloud
     }
 }

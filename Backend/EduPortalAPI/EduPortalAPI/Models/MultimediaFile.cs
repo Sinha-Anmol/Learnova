@@ -1,5 +1,4 @@
-﻿// Updated MultimediaFile.cs
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace EduPortalAPI.Models
@@ -25,6 +24,26 @@ namespace EduPortalAPI.Models
         public string ShortDescription { get; set; }
 
         [Required]
-        public string UploadedBy { get; set; } // Email of the uploader
+        public string UploadedBy { get; set; }
+
+        // New fields
+        [Required]
+        [MaxLength(50)]
+        public string Domain { get; set; } // "FullStack", "Frontend", etc.
+
+        [Required]
+        [MaxLength(20)]
+        public string Level { get; set; } // "Beginner", "Intermediate", "Advanced"
+    }
+
+    // Add this enum in the same file or separate
+    public enum ContentDomain
+    {
+        FullStack,
+        Frontend,
+        Backend,
+        DevOps,
+        QualityAssurance,
+        Cloud
     }
 }

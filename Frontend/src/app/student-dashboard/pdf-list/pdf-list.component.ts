@@ -1,11 +1,13 @@
+// pdf-list.component.ts
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-pdf-list',
@@ -17,77 +19,66 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './pdf-list.component.html',
-  styleUrls: ['./pdf-list.component.scss']
+  templateUrl: './pdf-list.component.html'
 })
 export class PdfListComponent implements OnInit {
   pdfs: any[] = [];
   loading = true;
   error = false;
-  defaultThumbnail = 'assets/pdf-thumbnail.png';
+  domain = '';
+  level = '';
 
   constructor(
     private http: HttpClient,
+    private route: ActivatedRoute,
     private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
-    this.loadPdfs();
+    this.route.queryParams.subscribe(params => {
+      this.domain = params['domain'] || '';
+      this.level = params['level'] || '';
+      this.loadPdfs();
+    });
   }
 
   loadPdfs() {
-    const apiUrl = 'https://localhost:7030/api/Multimedia/all-files';
-    this.http.get<any[]>(apiUrl).subscribe({
-      next: (data) => {
-        this.pdfs = data
-          .filter(file => file.fileType.includes('pdf'))
+    this.loading = true;
+    this.error = false;
+    
+    this.http.get<any[]>('https://localhost:7030/api/Multimedia/all-files').subscribe({
+      next: (allFiles) => {
+        // Filter on client side
+        this.pdfs = allFiles
+          .filter(file => 
+            file.fileType.includes('pdf') &&
+            (this.domain ? file.domain === this.domain : true) &&
+            (this.level ? file.level === this.level : true)
+          )
           .map(pdf => ({
             ...pdf,
-            safeUrl: this.createPdfUrl(pdf.fileData),
-            thumbnail: this.defaultThumbnail
+            safeUrl: this.sanitizer.bypassSecurityTrustResourceUrl(
+              `data:${pdf.fileType};base64,${pdf.fileData}`
+            )
           }));
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching PDFs:', err);
+        console.error('Error:', err);
         this.error = true;
         this.loading = false;
       }
     });
   }
 
-  createPdfUrl(base64Data: string): SafeResourceUrl {
-    // Remove any existing data URL prefix if present
-    const cleanBase64 = base64Data.replace(/^data:application\/pdf;base64,/, '');
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `data:application/pdf;base64,${cleanBase64}`
-    );
+  viewPdf(pdf: any) {
+    window.open(pdf.safeUrl, '_blank');
   }
 
   downloadPdf(pdf: any) {
     const link = document.createElement('a');
-    link.href = `data:application/pdf;base64,${pdf.fileData}`;
+    link.href = `data:${pdf.fileType};base64,${pdf.fileData}`;
     link.download = pdf.fileName;
     link.click();
-  }
-
-  viewPdf(pdf: any) {
-    const pdfWindow = window.open('', '_blank');
-    if (pdfWindow) {
-      pdfWindow.document.write(`
-        <html>
-          <head>
-            <title>${pdf.fileName}</title>
-            <style>
-              body, html { margin: 0; padding: 0; height: 100%; }
-              embed { width: 100%; height: 100%; }
-            </style>
-          </head>
-          <body>
-            <embed src="data:application/pdf;base64,${pdf.fileData}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf">
-          </body>
-        </html>
-      `);
-    }
   }
 }

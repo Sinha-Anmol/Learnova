@@ -9,6 +9,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-teacher-dashboard',
@@ -21,7 +23,9 @@ import { MatTableModule } from '@angular/material/table';
     MatToolbarModule,
     MatTabsModule,
     RouterModule,
-    MatTableModule
+    MatTableModule,
+    MatSelectModule,
+    MatFormFieldModule
   ],
   templateUrl: './teacher-dashboard.component.html',
   styleUrls: ['./teacher-dashboard.component.scss']
@@ -35,7 +39,15 @@ export class TeacherDashboardComponent implements OnInit {
 
   userEmail: string | null = null;
   multimediaFiles: any[] = [];
-  displayedColumns: string[] = ['fileName', 'fileType', 'shortDescription', 'uploadedOn', 'fileSize'];
+  displayedColumns: string[] = ['fileName', 'fileType', 'domain', 'level', 'shortDescription', 'uploadedOn', 'fileSize'];
+  
+  // Domain and level options
+  domains = ['FullStack', 'Frontend', 'Backend', 'DevOps', 'QualityAssurance', 'Cloud'];
+  levels = ['Beginner', 'Intermediate', 'Advanced'];
+
+  // Filters
+  selectedDomain = '';
+  selectedLevel = '';
 
   constructor(
     public router: Router,
@@ -57,7 +69,6 @@ export class TeacherDashboardComponent implements OnInit {
 
   loadUserEmail() {
     this.userEmail = localStorage.getItem('email'); 
-
     if (!this.userEmail) {
       const token = localStorage.getItem('authToken');
       if (token) {
@@ -81,14 +92,21 @@ export class TeacherDashboardComponent implements OnInit {
       return;
     }
 
-    const apiUrl = `https://localhost:7030/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
+    let apiUrl = `https://localhost:7030/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
+    
+    if (this.selectedDomain) {
+      apiUrl += `&domain=${this.selectedDomain}`;
+    }
+    if (this.selectedLevel) {
+      apiUrl += `&level=${this.selectedLevel}`;
+    }
+
     const token = localStorage.getItem('authToken');
 
     this.http.get(apiUrl, { 
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) 
     }).subscribe({
       next: (data: any) => {
-        console.log('Fetched Files:', data);
         this.multimediaFiles = data;
       },
       error: (err) => {
@@ -96,6 +114,16 @@ export class TeacherDashboardComponent implements OnInit {
         this.snackBar.open('Failed to load files', 'Close', { duration: 3000 });
       }
     });
+  }
+
+  applyFilters() {
+    this.loadUserFiles();
+  }
+
+  resetFilters() {
+    this.selectedDomain = '';
+    this.selectedLevel = '';
+    this.loadUserFiles();
   }
 
   private decodeJwt(token: string): any {

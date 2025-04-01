@@ -1,44 +1,34 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { LevelSelectionComponent } from './level-selection/level-selection.component';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
-import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule, MatListModule],
+  imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './student-dashboard.component.html',
   styleUrls: ['./student-dashboard.component.scss']
 })
 export class StudentDashboardComponent {
-  constructor(private router: Router) {}
-
-  openVideosPage() {
-    this.router.navigate(['/student-dashboard/videos']);
-  }
-
-  openPdfsPage() {
-    this.router.navigate(['/student-dashboard/pdfs']);
-  }
-
-  // For future expansion
-  cards = [
-    {
-      title: 'Video Library',
-      description: 'Access all your course videos in one place',
-      icon: 'ondemand_video',
-      action: () => this.openVideosPage(),
-      color: 'primary'
-    },
-    {
-      title: 'PDF Resources',
-      description: 'Download study materials and lecture notes',
-      icon: 'picture_as_pdf',
-      action: () => this.openPdfsPage(),
-      color: 'accent'
-    }
+  domains = [
+    { name: 'FullStack', icon: 'code' },
+    { name: 'Frontend', icon: 'web' },
+    { name: 'Backend', icon: 'storage' },
+    { name: 'DevOps', icon: 'cloud' },
+    { name: 'Quality Assurance', icon: 'verified' },
+    { name: 'Cloud', icon: 'public' }
   ];
+
+  constructor(private dialog: MatDialog) {}
+
+  openLevelSelection(domain: string) {
+    this.dialog.open(LevelSelectionComponent, {
+      data: { domain },
+      width: '400px'
+    });
+  }
 }

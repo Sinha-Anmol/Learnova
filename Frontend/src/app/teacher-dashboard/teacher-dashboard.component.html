@@ -1,60 +1,105 @@
 <div class="dashboard-container">
-    <mat-toolbar color="primary" class="dashboard-toolbar">
-      <span>Teacher Dashboard</span>
-      <span class="spacer"></span>
-      <button mat-icon-button>
-        <mat-icon>notifications</mat-icon>
-      </button>
-    </mat-toolbar>
-  
-    <div class="dashboard-content">
-      <div class="stats-section">
-        <mat-card class="stat-card">
-          <mat-icon class="stat-icon">school</mat-icon>
-          <div class="stat-value">{{ stats.courses }}</div>
-          <div class="stat-label">Courses</div>
-        </mat-card>
-  
-        <mat-card class="stat-card">
-          <mat-icon class="stat-icon">people</mat-icon>
-          <div class="stat-value">{{ stats.students }}</div>
-          <div class="stat-label">Students</div>
-        </mat-card>
-  
-        <mat-card class="stat-card">
-          <mat-icon class="stat-icon">folder</mat-icon>
-          <div class="stat-value">{{ stats.files }}</div>
-          <div class="stat-label">Files</div>
-        </mat-card>
-      </div>
-  
-      <div class="actions-section">
-        <mat-card class="action-card">
-          <h3>Upload Materials</h3>
-          <div class="action-buttons">
-            <button mat-raised-button routerLink="video-upload">
-              <mat-icon>video_library</mat-icon> Upload Video
-            </button>
-            
-            <button mat-raised-button routerLink="pdf-upload">
-              <mat-icon>picture_as_pdf</mat-icon> Upload PDF
-            </button>
-          </div>
-        </mat-card>
-      </div>
-  
-      <div class="recent-files">
-        <mat-card>
-          <h3>Your Uploaded Files</h3>
-          <table mat-table [dataSource]="multimediaFiles" class="mat-elevation-z8">
+  <mat-toolbar color="primary" class="dashboard-toolbar">
+    <span>Teacher Dashboard</span>
+    <span class="spacer"></span>
+    <button mat-icon-button>
+      <mat-icon>notifications</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div class="dashboard-content">
+    <div class="stats-section">
+      <mat-card class="stat-card">
+        <mat-icon class="stat-icon">school</mat-icon>
+        <div class="stat-value">{{ stats.courses }}</div>
+        <div class="stat-label">Courses</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-icon class="stat-icon">people</mat-icon>
+        <div class="stat-value">{{ stats.students }}</div>
+        <div class="stat-label">Students</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-icon class="stat-icon">folder</mat-icon>
+        <div class="stat-value">{{ stats.files }}</div>
+        <div class="stat-label">Files</div>
+      </mat-card>
+    </div>
+
+    <div class="actions-section">
+      <mat-card class="action-card">
+        <h3>Upload Materials</h3>
+        <div class="action-buttons">
+          <button mat-raised-button color="accent" routerLink="video-upload">
+            <mat-icon>video_library</mat-icon> Upload Video
+          </button>
+          
+          <button mat-raised-button color="accent" routerLink="pdf-upload">
+            <mat-icon>picture_as_pdf</mat-icon> Upload PDF
+          </button>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="filters-section">
+      <mat-card>
+        <h3>Filter Files</h3>
+        <div class="filter-controls">
+          <mat-form-field>
+            <mat-label>Domain</mat-label>
+            <mat-select [(value)]="selectedDomain">
+              <mat-option value="">All Domains</mat-option>
+              <mat-option *ngFor="let domain of domains" [value]="domain">
+                {{ domain }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Level</mat-label>
+            <mat-select [(value)]="selectedLevel">
+              <mat-option value="">All Levels</mat-option>
+              <mat-option *ngFor="let level of levels" [value]="level">
+                {{ level }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="applyFilters()">
+            Apply Filters
+          </button>
+          <button mat-stroked-button (click)="resetFilters()">
+            Reset
+          </button>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="recent-files">
+      <mat-card>
+        <h3>Your Uploaded Files</h3>
+        <div class="table-container">
+          <table mat-table [dataSource]="multimediaFiles" class="mat-elevation-z1">
             <ng-container matColumnDef="fileName">
               <th mat-header-cell *matHeaderCellDef> File Name </th>
               <td mat-cell *matCellDef="let file"> {{ file.fileName }} </td>
             </ng-container>
   
             <ng-container matColumnDef="fileType">
-              <th mat-header-cell *matHeaderCellDef> File Type </th>
-              <td mat-cell *matCellDef="let file"> {{ file.fileType }} </td>
+              <th mat-header-cell *matHeaderCellDef> Type </th>
+              <td mat-cell *matCellDef="let file"> {{ file.fileType.split('/')[1] | uppercase }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="domain">
+              <th mat-header-cell *matHeaderCellDef> Domain </th>
+              <td mat-cell *matCellDef="let file"> {{ file.domain }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="level">
+              <th mat-header-cell *matHeaderCellDef> Level </th>
+              <td mat-cell *matCellDef="let file"> {{ file.level }} </td>
             </ng-container>
   
             <ng-container matColumnDef="shortDescription">
@@ -64,19 +109,19 @@
   
             <ng-container matColumnDef="uploadedOn">
               <th mat-header-cell *matHeaderCellDef> Uploaded On </th>
-              <td mat-cell *matCellDef="let file"> {{ file.uploadedOn | date:'short' }} </td>
+              <td mat-cell *matCellDef="let file"> {{ file.uploadedOn | date:'mediumDate' }} </td>
             </ng-container>
   
             <ng-container matColumnDef="fileSize">
-              <th mat-header-cell *matHeaderCellDef> File Size (Bytes) </th>
-              <td mat-cell *matCellDef="let file"> {{ file.fileSize }} </td>
+              <th mat-header-cell *matHeaderCellDef> Size </th>
+              <td mat-cell *matCellDef="let file"> {{ file.fileSize / 1024 | number:'1.0-0' }} KB </td>
             </ng-container>
   
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
-        </mat-card>
-      </div>
+        </div>
+      </mat-card>
     </div>
   </div>
-  
+</div>

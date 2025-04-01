@@ -1,16 +1,53 @@
 <div class="upload-container">
+  <div class="upload-card">
     <h2>Upload PDF</h2>
-  
+    <p class="subtitle">Share educational materials with your students</p>
+
     <form [formGroup]="uploadForm" (ngSubmit)="uploadPdf()">
-      <label>Select PDF File:</label>
-      <input type="file" (change)="onFileSelected($event)" accept="application/pdf" />
-  
-      <label>Short Description:</label>
-      <textarea formControlName="shortDescription" rows="3"></textarea>
-  
-      <button mat-raised-button color="primary" type="submit" [disabled]="isUploading">
-        {{ isUploading ? 'Uploading...' : 'Upload' }}
+      <div class="form-group">
+        <label>Domain</label>
+        <select formControlName="domain" class="form-control">
+          <option value="" disabled selected>Select Domain</option>
+          <option *ngFor="let domain of domains" [value]="domain">{{ domain }}</option>
+        </select>
+        <div *ngIf="uploadForm.get('domain')?.invalid && uploadForm.get('domain')?.touched" class="error">
+          Domain is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Level</label>
+        <select formControlName="level" class="form-control">
+          <option value="" disabled selected>Select Level</option>
+          <option *ngFor="let level of levels" [value]="level">{{ level }}</option>
+        </select>
+        <div *ngIf="uploadForm.get('level')?.invalid && uploadForm.get('level')?.touched" class="error">
+          Level is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>PDF File</label>
+        <input type="file" id="pdfFile" (change)="onFileSelected($event)" accept="application/pdf" class="file-input">
+        <label for="pdfFile" class="file-label">
+          {{ uploadForm.get('file')?.value?.name || 'Choose a PDF file' }}
+        </label>
+        <div *ngIf="uploadForm.get('file')?.invalid && uploadForm.get('file')?.touched" class="error">
+          PDF file is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="shortDescription" rows="4" class="form-control"></textarea>
+        <div *ngIf="uploadForm.get('shortDescription')?.invalid && uploadForm.get('shortDescription')?.touched" class="error">
+          Description is required (max 500 chars)
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="isUploading || uploadForm.invalid">
+        {{ isUploading ? 'Uploading...' : 'Upload PDF' }}
       </button>
     </form>
   </div>
-  
+</div>

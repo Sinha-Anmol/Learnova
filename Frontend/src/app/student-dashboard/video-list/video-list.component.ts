@@ -1,11 +1,13 @@
+// video-list.component.ts
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-video-list',
@@ -24,28 +26,34 @@ export class VideoListComponent implements OnInit {
   videos: any[] = [];
   loading = true;
   error = false;
-  defaultThumbnail = 'assets/video-thumbnail.png';
+  domain = '';
+  level = '';
 
   constructor(
     private http: HttpClient,
+    private route: ActivatedRoute,
     private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
-    this.loadVideos();
+    this.route.queryParams.subscribe(params => {
+      this.domain = params['domain'] || '';
+      this.level = params['level'] || '';
+      this.loadVideos();
+    });
   }
 
   loadVideos() {
-    const apiUrl = 'https://localhost:7030/api/Multimedia/all-files';
-    this.http.get<any[]>(apiUrl).subscribe({
+    let url = 'https://localhost:7030/api/Multimedia/domain-files?fileType=video';
+    if (this.domain) url += `&domain=${this.domain}`;
+    if (this.level) url += `&level=${this.level}`;
+
+    this.http.get<any[]>(url).subscribe({
       next: (data) => {
-        this.videos = data
-          .filter(file => file.fileType.includes('video'))
-          .map(video => ({
-            ...video,
-            safeUrl: this.createVideoUrl(video.fileData),
-            thumbnail: this.defaultThumbnail
-          }));
+        this.videos = data.map(video => ({
+          ...video,
+          safeUrl: this.createVideoUrl(video.fileData)
+        }));
         this.loading = false;
       },
       error: (err) => {
@@ -57,7 +65,6 @@ export class VideoListComponent implements OnInit {
   }
 
   createVideoUrl(base64Data: string): SafeResourceUrl {
-    // Remove any existing data URL prefix if present
     const cleanBase64 = base64Data.replace(/^data:video\/\w+;base64,/, '');
     return this.sanitizer.bypassSecurityTrustResourceUrl(
       `data:video/mp4;base64,${cleanBase64}`
