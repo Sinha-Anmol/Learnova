@@ -20,7 +20,12 @@ RUN dotnet publish "EduPortalAPI.csproj" -c Release -o /app/publish /p:UseAppHos
 # Final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
+RUN mkdir -p /app/wwwroot
 COPY --from=publish /app/publish .
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "EduPortalAPI.dll"]
 
 # Set environment variables
 ENV ASPNETCORE_URLS=http://+:8080

@@ -114,15 +114,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Enable Swagger Middleware
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "EduPortal API V1");
-        c.RoutePrefix = "swagger";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "EduPortal API V1");
+    c.RoutePrefix = "swagger";
+});
 
 // Map Controllers and SignalR Hub
 app.UseStaticFiles(); // Enable static file serving (optional)
