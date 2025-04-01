@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
-import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,60 +16,46 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterLink,
+    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule,
     MatSelectModule,
-    RouterLink,
-    HttpClientModule,
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss'],
+  styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent {
   signupForm: FormGroup;
-  errorMessage: string | null = null;
-  successMessage: string | null = null;
+  isLoading = false;
+  hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router
+    private authService: AuthService
   ) {
     this.signupForm = this.fb.group({
-      fullName: ['', Validators.required],
+      name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['student', Validators.required],
+      role: ['student', Validators.required]
     });
   }
 
   onSubmit() {
     if (this.signupForm.valid) {
-      const user = {
-        FullName: this.signupForm.value.fullName,
-        Email: this.signupForm.value.email,
-        Password: this.signupForm.value.password,
-        Role: this.signupForm.value.role.toLowerCase(),
-      };
-
-      // Call the backend API to register the user
-      this.http.post<any>('https://learnova-production.up.railway.app/api/auth/register', user).subscribe({
+      this.isLoading = true;
+      this.authService.signup(this.signupForm.value).subscribe({
         next: (response) => {
-          console.log('Registration successful:', response);
-          this.successMessage = 'Registration successful! Redirecting to login...';
-          this.errorMessage = null;
-
-          // Redirect to login after 2 seconds
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
+          this.isLoading = false;
+          // Handle successful signup
         },
         error: (error) => {
-          console.error('Registration failed:', error);
-          this.errorMessage = error.error || 'Registration failed. Please try again.';
-          this.successMessage = null;
-        },
+          this.isLoading = false;
+          // Handle error
+        }
       });
     }
   }

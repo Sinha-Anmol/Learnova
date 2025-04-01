@@ -1,6 +1,11 @@
 <mat-toolbar color="primary">
-    <span>Learnova</span>
-    <span class="spacer"></span>
-    <a mat-button routerLink="/login">Login</a>
-    <a mat-button routerLink="/signup">Signup</a>
-  </mat-toolbar>
+  <div class="navbar-container">
+    <a routerLink="/" class="logo">
+      <span>Learnly</span>
+    </a>
+    <div class="nav-buttons">
+      <a mat-button routerLink="/login">Login</a>
+      <a mat-raised-button routerLink="/signup" color="accent">Sign up</a>
+    </div>
+  </div>
+</mat-toolbar>

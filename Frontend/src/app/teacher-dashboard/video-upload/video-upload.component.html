@@ -1,53 +1,118 @@
-<div class="upload-container">
-  <div class="upload-card">
-    <h2>Upload Video</h2>
-    <p class="subtitle">Share educational videos with your students</p>
+<div class="video-upload-container">
+  <div class="upload-header">
+    <div class="header-content">
+      <h1>Share Your Knowledge</h1>
+      <p>Upload your educational videos and help students learn effectively</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <mat-icon>video_library</mat-icon>
+        <span>{{totalVideos}} Videos</span>
+      </div>
+      <div class="stat-item">
+        <mat-icon>school</mat-icon>
+        <span>{{totalStudents}} Students</span>
+      </div>
+      <div class="stat-item">
+        <mat-icon>stars</mat-icon>
+        <span>{{averageRating}} Rating</span>
+      </div>
+    </div>
+  </div>
 
-    <form [formGroup]="uploadForm" (ngSubmit)="uploadVideo()">
-      <div class="form-group">
-        <label>Domain</label>
-        <select formControlName="domain" class="form-control">
-          <option value="" disabled selected>Select Domain</option>
-          <option *ngFor="let domain of domains" [value]="domain">{{ domain }}</option>
-        </select>
-        <div *ngIf="uploadForm.get('domain')?.invalid && uploadForm.get('domain')?.touched" class="error">
-          Domain is required
+  <div class="upload-content">
+    <div class="upload-section">
+      <div class="upload-card" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+        <div class="upload-icon">
+          <mat-icon>cloud_upload</mat-icon>
         </div>
+        <h3>Drag & Drop Your Video</h3>
+        <p>or</p>
+        <button mat-stroked-button class="browse-button" (click)="fileInput.click()">
+          <mat-icon>folder_open</mat-icon>
+          Browse Files
+        </button>
+        <input #fileInput type="file" hidden accept="video/*" (change)="onFileSelected($event)">
+        <p class="file-info">Supported formats: MP4, WebM, MOV</p>
       </div>
 
-      <div class="form-group">
-        <label>Level</label>
-        <select formControlName="level" class="form-control">
-          <option value="" disabled selected>Select Level</option>
-          <option *ngFor="let level of levels" [value]="level">{{ level }}</option>
-        </select>
-        <div *ngIf="uploadForm.get('level')?.invalid && uploadForm.get('level')?.touched" class="error">
-          Level is required
+      <div class="upload-form" *ngIf="selectedFile">
+        <h2>Video Details</h2>
+        <form [formGroup]="uploadForm" (ngSubmit)="uploadVideo()">
+          <mat-form-field>
+            <mat-label>Short Description</mat-label>
+            <textarea matInput formControlName="shortDescription" rows="3" placeholder="Briefly describe your video content"></textarea>
+            <mat-error *ngIf="uploadForm.get('shortDescription')?.hasError('required')">
+              Description is required
+            </mat-error>
+            <mat-error *ngIf="uploadForm.get('shortDescription')?.hasError('maxlength')">
+              Description cannot exceed 500 characters
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field>
+              <mat-label>Domain</mat-label>
+              <mat-select formControlName="domain">
+                <mat-option *ngFor="let domain of domains" [value]="domain">
+                  {{domain}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="uploadForm.get('domain')?.hasError('required')">
+                Domain is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Level</mat-label>
+              <mat-select formControlName="level">
+                <mat-option *ngFor="let level of levels" [value]="level">
+                  {{level}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="uploadForm.get('level')?.hasError('required')">
+                Level is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="cancelUpload()">
+              Cancel
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!uploadForm.valid || isUploading">
+              <mat-icon>upload</mat-icon>
+              Upload Video
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="tips-section">
+      <h2>Tips for Great Educational Videos</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <mat-icon>timer</mat-icon>
+          <h3>Keep it Concise</h3>
+          <p>Break down complex topics into 5-10 minute segments for better engagement</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>record_voice_over</mat-icon>
+          <h3>Clear Audio</h3>
+          <p>Ensure good sound quality and speak clearly to maintain student attention</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>visibility</mat-icon>
+          <h3>Visual Quality</h3>
+          <p>Use high-quality visuals and maintain good lighting for better understanding</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>groups</mat-icon>
+          <h3>Engage Students</h3>
+          <p>Create interactive content that keeps students engaged and motivated to learn.</p>
         </div>
       </div>
-
-      <div class="form-group">
-        <label>Video File</label>
-        <input type="file" id="videoFile" (change)="onFileSelected($event)" accept="video/*" class="file-input">
-        <label for="videoFile" class="file-label">
-          {{ uploadForm.get('file')?.value?.name || 'Choose a video file' }}
-        </label>
-        <div *ngIf="uploadForm.get('file')?.invalid && uploadForm.get('file')?.touched" class="error">
-          Video file is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Description</label>
-        <textarea formControlName="shortDescription" rows="4" class="form-control"></textarea>
-        <div *ngIf="uploadForm.get('shortDescription')?.invalid && uploadForm.get('shortDescription')?.touched" class="error">
-          Description is required (max 500 chars)
-        </div>
-      </div>
-
-      <button type="submit" class="submit-btn" [disabled]="isUploading || uploadForm.invalid">
-        {{ isUploading ? 'Uploading...' : 'Upload Video' }}
-      </button>
-    </form>
+    </div>
   </div>
 </div>

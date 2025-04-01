@@ -1,53 +1,104 @@
-<div class="upload-container">
-  <div class="upload-card">
-    <h2>Upload PDF</h2>
-    <p class="subtitle">Share educational materials with your students</p>
+<div class="pdf-upload-container">
+  <div class="upload-header">
+    <div class="header-content">
+      <h1>Share Your Knowledge</h1>
+      <p>Upload your educational PDFs and help students learn effectively</p>
+    </div>
+  </div>
 
-    <form [formGroup]="uploadForm" (ngSubmit)="uploadPdf()">
-      <div class="form-group">
-        <label>Domain</label>
-        <select formControlName="domain" class="form-control">
-          <option value="" disabled selected>Select Domain</option>
-          <option *ngFor="let domain of domains" [value]="domain">{{ domain }}</option>
-        </select>
-        <div *ngIf="uploadForm.get('domain')?.invalid && uploadForm.get('domain')?.touched" class="error">
-          Domain is required
+  <div class="upload-content">
+    <div class="upload-section">
+      <div class="upload-card" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+        <div class="upload-icon">
+          <mat-icon>cloud_upload</mat-icon>
         </div>
+        <h3>Drag & Drop Your PDF</h3>
+        <p>or</p>
+        <button mat-stroked-button class="browse-button" (click)="fileInput.click()">
+          <mat-icon>folder_open</mat-icon>
+          Browse Files
+        </button>
+        <input #fileInput type="file" hidden accept=".pdf" (change)="onFileSelected($event)">
+        <p class="file-info">Supported format: PDF</p>
       </div>
 
-      <div class="form-group">
-        <label>Level</label>
-        <select formControlName="level" class="form-control">
-          <option value="" disabled selected>Select Level</option>
-          <option *ngFor="let level of levels" [value]="level">{{ level }}</option>
-        </select>
-        <div *ngIf="uploadForm.get('level')?.invalid && uploadForm.get('level')?.touched" class="error">
-          Level is required
+      <div class="upload-form" *ngIf="selectedFile">
+        <h2>PDF Details</h2>
+        <form [formGroup]="uploadForm" (ngSubmit)="uploadPdf()">
+          <mat-form-field>
+            <mat-label>Short Description</mat-label>
+            <textarea matInput formControlName="shortDescription" rows="3" placeholder="Briefly describe your PDF content"></textarea>
+            <mat-error *ngIf="uploadForm.get('shortDescription')?.hasError('required')">
+              Description is required
+            </mat-error>
+            <mat-error *ngIf="uploadForm.get('shortDescription')?.hasError('maxlength')">
+              Description cannot exceed 500 characters
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field>
+              <mat-label>Domain</mat-label>
+              <mat-select formControlName="domain">
+                <mat-option *ngFor="let domain of domains" [value]="domain">
+                  {{domain}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="uploadForm.get('domain')?.hasError('required')">
+                Domain is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Level</mat-label>
+              <mat-select formControlName="level">
+                <mat-option *ngFor="let level of levels" [value]="level">
+                  {{level}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="uploadForm.get('level')?.hasError('required')">
+                Level is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="cancelUpload()">
+              Cancel
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!uploadForm.valid || isUploading">
+              <mat-icon>upload</mat-icon>
+              Upload PDF
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="tips-section">
+      <h2>Tips for Great Educational PDFs</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <mat-icon>description</mat-icon>
+          <h3>Clear Structure</h3>
+          <p>Organize content with clear headings, sections, and bullet points for easy reading</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>image</mat-icon>
+          <h3>Visual Elements</h3>
+          <p>Include relevant diagrams, charts, and images to enhance understanding</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>format_size</mat-icon>
+          <h3>Readable Format</h3>
+          <p>Use consistent fonts, proper spacing, and clear formatting for better readability</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>quiz</mat-icon>
+          <h3>Interactive Elements</h3>
+          <p>Add exercises, quizzes, and practice problems to reinforce learning</p>
         </div>
       </div>
-
-      <div class="form-group">
-        <label>PDF File</label>
-        <input type="file" id="pdfFile" (change)="onFileSelected($event)" accept="application/pdf" class="file-input">
-        <label for="pdfFile" class="file-label">
-          {{ uploadForm.get('file')?.value?.name || 'Choose a PDF file' }}
-        </label>
-        <div *ngIf="uploadForm.get('file')?.invalid && uploadForm.get('file')?.touched" class="error">
-          PDF file is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Description</label>
-        <textarea formControlName="shortDescription" rows="4" class="form-control"></textarea>
-        <div *ngIf="uploadForm.get('shortDescription')?.invalid && uploadForm.get('shortDescription')?.touched" class="error">
-          Description is required (max 500 chars)
-        </div>
-      </div>
-
-      <button type="submit" class="submit-btn" [disabled]="isUploading || uploadForm.invalid">
-        {{ isUploading ? 'Uploading...' : 'Upload PDF' }}
-      </button>
-    </form>
+    </div>
   </div>
 </div>

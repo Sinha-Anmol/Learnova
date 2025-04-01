@@ -7,43 +7,156 @@
     </div>
   
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero">
       <div class="hero-content">
-        <div class="hero-text">
-          <h1>Welcome to <span class="highlight">Learnova</span></h1>
-          <p class="subtitle">Your online e-learning platform for mastering new skills.</p>
-          <div class="cta-buttons">
-            <button mat-raised-button color="primary" routerLink="/login">Login</button>
-            <button mat-raised-button color="accent" routerLink="/signup">Sign Up</button>
-          </div>
-        </div>
-        <div class="hero-image">
-          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80" alt="Students learning together" />
-        </div>
+        <h1>Unlock Your Potential</h1>
+        <h2>With New Skills</h2>
+        <p>Unlock a world of opportunities and take control of your future by mastering new skills that empower you to achieve your goals.</p>
+        <button mat-raised-button color="primary" routerLink="/signup">Start Learning</button>
       </div>
     </section>
   
-    <!-- Features Section -->
-    <section class="features-section">
+    <!-- Why Choose Learnova Section -->
+    <section class="features">
       <h2>Why Choose Learnova?</h2>
       <div class="features-grid">
-        <div *ngFor="let feature of features" class="feature-card">
-          <div class="icon">{{ feature.icon }}</div>
-          <h3>{{ feature.title }}</h3>
-          <p>{{ feature.description }}</p>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="0">
+          <div class="feature-icon">
+            <mat-icon>school</mat-icon>
+          </div>
+          <h3>Expert-Led Courses</h3>
+          <p>Learn from industry professionals with real-world experience and proven expertise.</p>
+          <div class="glow-effect"></div>
+        </div>
+  
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-icon">
+            <mat-icon>devices</mat-icon>
+          </div>
+          <h3>Learn Anywhere</h3>
+          <p>Access your courses on any device, anytime, with our responsive platform.</p>
+          <div class="glow-effect"></div>
+        </div>
+  
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-icon">
+            <mat-icon>trending_up</mat-icon>
+          </div>
+          <h3>Track Progress</h3>
+          <p>Monitor your learning journey with detailed analytics and progress tracking.</p>
+          <div class="glow-effect"></div>
+        </div>
+  
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-icon">
+            <mat-icon>group</mat-icon>
+          </div>
+          <h3>Community Support</h3>
+          <p>Join a vibrant community of learners and collaborate with peers worldwide.</p>
+          <div class="glow-effect"></div>
+        </div>
+  
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-icon">
+            <mat-icon>workspace_premium</mat-icon>
+          </div>
+          <h3>Certification</h3>
+          <p>Earn industry-recognized certificates upon course completion.</p>
+          <div class="glow-effect"></div>
+        </div>
+  
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+          <div class="feature-icon">
+            <mat-icon>update</mat-icon>
+          </div>
+          <h3>Latest Content</h3>
+          <p>Stay updated with the latest industry trends and technologies.</p>
+          <div class="glow-effect"></div>
         </div>
       </div>
     </section>
   
     <!-- CTA Section -->
     <section class="cta-section">
+      <div class="cta-background"></div>
       <div class="cta-content">
-        <h2>Ready to Start Learning?</h2>
-        <p>Join thousands of students and unlock your potential today.</p>
-        <div class="cta-buttons">
-          <button mat-raised-button color="primary" routerLink="/signup">Get Started</button>
-          <button mat-raised-button color="accent" routerLink="/courses">Explore Courses</button>
+        <div class="cta-icon">
+          <mat-icon>rocket_launch</mat-icon>
         </div>
+        <h2>Ready to Start Learning?</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-number">1000+</span>
+            <span class="stat-label">Active Students</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Expert Instructors</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100+</span>
+            <span class="stat-label">Free Courses</span>
+          </div>
+        </div>
+        <p>Join our growing community of learners and start your journey today!</p>
+        <div class="cta-buttons">
+          <button mat-raised-button color="primary" routerLink="/signup">
+            <mat-icon>person_add</mat-icon>
+            Get Started Free
+          </button>
+          <button mat-raised-button color="accent" routerLink="/courses">
+            <mat-icon>library_books</mat-icon>
+            Browse Courses
+          </button>
+        </div>
+        <div class="trust-badges">
+          <div class="badge">
+            <mat-icon>verified</mat-icon>
+            <span>Quality Content</span>
+          </div>
+          <div class="badge">
+            <mat-icon>security</mat-icon>
+            <span>Secure Platform</span>
+          </div>
+          <div class="badge">
+            <mat-icon>support_agent</mat-icon>
+            <span>24/7 Support</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- Categories Section -->
+    <section class="categories">
+      <h2>Categories</h2>
+      <div class="category-chips">
+        <mat-chip-listbox>
+          <mat-chip-option 
+            *ngFor="let category of categories"
+            [selected]="selectedCategory === category"
+            (click)="selectCategory(category)">
+            {{category}}
+          </mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+    </section>
+  
+    <!-- Courses Grid -->
+    <section class="courses">
+      <div class="courses-grid">
+        <mat-card class="course-card" *ngFor="let course of getFilteredCourses()">
+          <mat-card-header>
+            <mat-card-title>{{course.fileName}}</mat-card-title>
+            <mat-card-subtitle>{{course.domain}} • {{course.level}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="file-type">{{course.fileType}}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary" routerLink="/signup">View Course</button>
+            <button mat-stroked-button color="primary" routerLink="/signup">Start Learning</button>
+          </mat-card-actions>
+        </mat-card>
       </div>
     </section>
   </div>

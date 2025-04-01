@@ -1,26 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pdf-upload',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './pdf-upload.component.html',
   styleUrls: ['./pdf-upload.component.scss']
 })
-export class PdfUploadComponent {
+export class PdfUploadComponent implements OnInit {
   uploadForm: FormGroup;
   isUploading = false;
+  selectedFile: File | null = null;
+  isDragging = false;
   
   domains = ['FullStack', 'Frontend', 'Backend', 'DevOps', 'QualityAssurance', 'Cloud'];
   levels = ['Beginner', 'Intermediate', 'Advanced'];
 
   constructor(
     private http: HttpClient,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.uploadForm = this.fb.group({
       file: [null, Validators.required],
@@ -30,20 +47,61 @@ export class PdfUploadComponent {
     });
   }
 
+  ngOnInit() {
+    // Initialize any necessary data
+  }
+
+  private getLocalStorageItem(key: string): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.handleFile(files[0]);
+    }
+  }
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      this.uploadForm.patchValue({ file });
-      this.uploadForm.get('file')?.updateValueAndValidity();
-    } else {
-      alert('Please select a valid PDF file');
-      event.target.value = '';
+    if (file) {
+      this.handleFile(file);
     }
+  }
+
+  private handleFile(file: File) {
+    if (file.type !== 'application/pdf') {
+      this.snackBar.open('Please select a valid PDF file', 'Close', { duration: 3000 });
+      return;
+    }
+
+    this.selectedFile = file;
+    this.uploadForm.patchValue({ file });
+    this.uploadForm.get('file')?.updateValueAndValidity();
   }
 
   uploadPdf() {
     if (this.uploadForm.invalid) {
-      alert('Please fill all required fields correctly');
+      this.snackBar.open('Please fill all required fields correctly', 'Close', { duration: 3000 });
       return;
     }
   
@@ -53,9 +111,9 @@ export class PdfUploadComponent {
     formData.append('domain', this.uploadForm.value.domain);
     formData.append('level', this.uploadForm.value.level);
   
-    const token = localStorage.getItem('authToken');
+    const token = this.getLocalStorageItem('authToken');
     if (!token) {
-      alert('Please log in again');
+      this.snackBar.open('Please log in again', 'Close', { duration: 3000 });
       return;
     }
   
@@ -66,14 +124,24 @@ export class PdfUploadComponent {
     this.isUploading = true;
     this.http.post('https://learnova-production.up.railway.app/api/Multimedia/upload-pdf', formData, { headers }).subscribe({
       next: () => {
-        alert('PDF uploaded successfully!');
-        this.uploadForm.reset();
+        this.snackBar.open('PDF uploaded successfully!', 'Close', { duration: 3000 });
+        this.resetForm();
       },
       error: (error) => {
         console.error('Upload error:', error);
-        alert('Upload failed: ' + (error.error?.message || 'Server error'));
+        this.snackBar.open('Upload failed: ' + (error.error?.message || 'Server error'), 'Close', { duration: 3000 });
       },
       complete: () => (this.isUploading = false),
     });
+  }
+
+  cancelUpload() {
+    this.resetForm();
+  }
+
+  private resetForm() {
+    this.selectedFile = null;
+    this.uploadForm.reset();
+    this.isUploading = false;
   }
 }

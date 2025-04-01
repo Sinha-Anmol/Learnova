@@ -1,18 +1,92 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
-    <h1>Welcome Back, Student!</h1>
+    <div class="header-content">
+      <h1>Welcome Back!</h1>
+      <p class="subtitle">Continue your learning journey</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <mat-icon>school</mat-icon>
+        <span>Learning Streak: 7 days</span>
+      </div>
+      <div class="stat-item">
+        <mat-icon>star</mat-icon>
+        <span>Points: 1250</span>
+      </div>
+    </div>
   </header>
 
-  <div class="domains-grid">
-    <mat-card *ngFor="let domain of domains" 
-              class="domain-card"
-              (click)="openLevelSelection(domain.name)">
-      <mat-card-header>
-        <div mat-card-avatar>
-          <mat-icon>{{domain.icon}}</mat-icon>
+  <div class="featured-section">
+    <h2>Continue Learning</h2>
+    <div class="featured-content">
+      <div class="featured-card">
+        <div class="progress-ring">
+          <mat-icon>play_circle</mat-icon>
         </div>
-        <mat-card-title>{{domain.name}}</mat-card-title>
-      </mat-card-header>
-    </mat-card>
+        <div class="content">
+          <h3>Last Watched</h3>
+          <p>Advanced JavaScript Concepts</p>
+          <div class="progress-bar">
+            <div class="progress" style="width: 75%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="featured-card">
+        <div class="progress-ring">
+          <mat-icon>description</mat-icon>
+        </div>
+        <div class="content">
+          <h3>Recent Document</h3>
+          <p>Python Programming Guide</p>
+          <div class="progress-bar">
+            <div class="progress" style="width: 60%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="domains-section">
+    <h2>Explore Domains</h2>
+    <div class="domains-grid">
+      <mat-card *ngFor="let domain of domains" 
+                class="domain-card"
+                (click)="openLevelSelection(domain.name)">
+        <mat-card-header>
+          <div mat-card-avatar>
+            <mat-icon>{{domain.icon}}</mat-icon>
+          </div>
+          <mat-card-title>{{domain.name}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="domain-description">Explore {{domain.name}} content and enhance your skills</p>
+          <div class="domain-stats">
+            <span><mat-icon>video_library</mat-icon> 25+ Videos</span>
+            <span><mat-icon>description</mat-icon> 15+ Documents</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="achievements-section">
+    <h2>Your Achievements</h2>
+    <div class="achievements-grid">
+      <div class="achievement-card">
+        <mat-icon>emoji_events</mat-icon>
+        <h3>Quick Learner</h3>
+        <p>Completed 5 courses in a week</p>
+      </div>
+      <div class="achievement-card">
+        <mat-icon>stars</mat-icon>
+        <h3>Consistent</h3>
+        <p>7-day learning streak</p>
+      </div>
+      <div class="achievement-card">
+        <mat-icon>workspace_premium</mat-icon>
+        <h3>Expert</h3>
+        <p>Mastered 3 domains</p>
+      </div>
+    </div>
   </div>
 </div>
