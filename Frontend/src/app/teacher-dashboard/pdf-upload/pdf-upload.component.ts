@@ -64,7 +64,7 @@ export class PdfUploadComponent {
     });
   
     this.isUploading = true;
-    this.http.post('https://localhost:7030/api/Multimedia/upload-pdf', formData, { headers }).subscribe({
+    this.http.post('https://learnova-production.up.railway.app/api/Multimedia/upload-pdf', formData, { headers }).subscribe({
       next: () => {
         alert('PDF uploaded successfully!');
         this.uploadForm.reset();

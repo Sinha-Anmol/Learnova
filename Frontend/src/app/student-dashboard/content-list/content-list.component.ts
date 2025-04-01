@@ -45,7 +45,7 @@ export class ContentListComponent implements OnInit {
     this.loading = true;
     this.error = false;
     
-    this.http.get<any[]>('https://localhost:7030/api/Multimedia/all-files').subscribe({
+    this.http.get<any[]>('https://learnova-production.up.railway.app/api/Multimedia/all-files').subscribe({
       next: (data) => {
         this.content = data.filter(item => 
           item.domain === this.domain && 

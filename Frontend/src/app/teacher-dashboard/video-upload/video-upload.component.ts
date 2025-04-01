@@ -64,7 +64,7 @@ export class VideoUploadComponent {
     });
   
     this.isUploading = true;
-    this.http.post('https://localhost:7030/api/Multimedia/upload-video', formData, { headers }).subscribe({
+    this.http.post('https://learnova-production.up.railway.app/api/Multimedia/upload-video', formData, { headers }).subscribe({
       next: () => {
         alert('Video uploaded successfully!');
         this.uploadForm.reset();

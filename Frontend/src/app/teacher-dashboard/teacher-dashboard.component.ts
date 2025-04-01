@@ -92,7 +92,7 @@ export class TeacherDashboardComponent implements OnInit {
       return;
     }
 
-    let apiUrl = `https://localhost:7030/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
+    let apiUrl = `https://learnova-production.up.railway.app/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
     
     if (this.selectedDomain) {
       apiUrl += `&domain=${this.selectedDomain}`;

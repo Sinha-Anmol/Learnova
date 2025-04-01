@@ -28,7 +28,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
-  private apiUrl = 'https://localhost:7030/api/auth/login';
+  private apiUrl = 'https://learnova-production.up.railway.app/api/auth/login';
 
   constructor(
     private fb: FormBuilder,

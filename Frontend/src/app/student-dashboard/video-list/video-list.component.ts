@@ -44,7 +44,7 @@ export class VideoListComponent implements OnInit {
   }
 
   loadVideos() {
-    let url = 'https://localhost:7030/api/Multimedia/domain-files?fileType=video';
+    let url = 'https://learnova-production.up.railway.app/api/Multimedia/domain-files?fileType=video';
     if (this.domain) url += `&domain=${this.domain}`;
     if (this.level) url += `&level=${this.level}`;
 

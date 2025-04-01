@@ -61,8 +61,8 @@ export class FileUploadComponent {
     });
 
     const endpoint = this.fileType === 'video' 
-      ? 'https://localhost:7030/api/Multimedia/upload-video' 
-      : 'https://localhost:7030/api/Multimedia/upload-pdf';
+      ? 'https://learnova-production.up.railway.app/api/Multimedia/upload-video' 
+      : 'https://learnova-production.up.railway.app/api/Multimedia/upload-pdf';
 
     this.http.post(endpoint, formData, { headers }).subscribe({
       next: (response) => {
