@@ -1,120 +1,91 @@
 // level-selection.component.ts
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient } from '@angular/common/http';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-level-selection',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatDialogModule],
   template: `
     <div class="level-selection-container">
-      <div class="header">
-        <h1>Select Your Level</h1>
-        <p>Choose the difficulty level that best suits your current knowledge</p>
-      </div>
-
-      <div class="levels-grid">
-        <div *ngFor="let level of levels" 
-             class="level-card"
-             [class.selected]="selectedLevel === level"
-             (click)="selectLevel(level)">
-          <div class="level-icon">
-            <mat-icon>{{getLevelIcon(level)}}</mat-icon>
-          </div>
-          <h2>{{level}}</h2>
-          <p>{{getLevelDescription(level)}}</p>
-          <div class="level-stats">
-            <span><mat-icon>video_library</mat-icon> {{getLevelVideos(level)}} Videos</span>
-            <span><mat-icon>description</mat-icon> {{getLevelDocuments(level)}} Documents</span>
+    <h2 mat-dialog-title>Select Level for {{data.domain}}</h2>
+    <mat-dialog-content>
+        <div class="levels-grid">
+          <div *ngFor="let level of levels" 
+               class="level-card"
+               [class.selected]="selectedLevel === level"
+               (click)="selectLevel(level)">
+            <div class="level-icon">
+              <mat-icon>{{getLevelIcon(level)}}</mat-icon>
+            </div>
+            <h3>{{level}}</h3>
+            <p>{{getLevelDescription(level)}}</p>
           </div>
         </div>
-      </div>
-
-      <div class="action-buttons">
-        <button mat-stroked-button (click)="goBack()">
-          <mat-icon>arrow_back</mat-icon>
-          Back
-        </button>
-        <button mat-raised-button 
-                color="primary" 
-                [disabled]="!selectedLevel"
-                (click)="proceed()">
-          Continue
-          <mat-icon>arrow_forward</mat-icon>
-        </button>
-      </div>
+    </mat-dialog-content>
     </div>
   `,
   styles: [`
     .level-selection-container {
-      min-height: 100vh;
       background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-      padding: 40px 20px;
       color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
-    .header {
+    mat-dialog-title {
+      color: #ffffff;
       text-align: center;
-      margin-bottom: 40px;
-      animation: fadeInDown 0.5s ease-out;
+      margin: 0;
+      padding: 20px;
+      background: rgba(0, 188, 212, 0.1);
+      border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+    }
 
-      h1 {
-        font-size: 2.5rem;
-        margin: 0;
-        background: linear-gradient(45deg, #00BCD4, #03A9F4);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      p {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.8);
-        margin-top: 10px;
-      }
+    mat-dialog-content {
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .levels-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      padding: 10px;
     }
 
     .level-card {
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      padding: 25px;
+      border-radius: 12px;
+      padding: 15px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
       border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
-      animation: fadeInUp 0.5s ease-out;
 
       &:hover {
-        transform: translateY(-5px);
+        transform: translateY(-3px);
         border-color: #00BCD4;
-        box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
       }
 
       &.selected {
         background: rgba(0, 188, 212, 0.1);
         border-color: #00BCD4;
-        box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
       }
 
       .level-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 20px;
+        width: 45px;
+        height: 45px;
+        margin: 0 auto 10px;
         background: rgba(0, 188, 212, 0.1);
         border-radius: 50%;
         display: flex;
@@ -124,179 +95,77 @@ import { CommonModule } from '@angular/common';
         transition: all 0.3s ease;
 
         mat-icon {
-          font-size: 2.5rem;
-          width: 2.5rem;
-          height: 2.5rem;
-          line-height: 2.5rem;
+          font-size: 1.6rem;
+          width: 1.6rem;
+          height: 1.6rem;
+          line-height: 1.6rem;
           color: #00BCD4;
         }
       }
 
-      h2 {
-        font-size: 1.5rem;
-        margin: 0 0 10px;
+      h3 {
+        font-size: 1.2rem;
+        margin: 0 0 6px;
         color: #ffffff;
       }
 
       p {
         color: rgba(255, 255, 255, 0.7);
-        margin-bottom: 20px;
-      }
-
-      .level-stats {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 0.9rem;
-
-        span {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-
-          mat-icon {
-            font-size: 1.2rem;
-            width: 1.2rem;
-            height: 1.2rem;
-            line-height: 1.2rem;
-            color: #00BCD4;
-          }
-        }
-      }
-    }
-
-    .action-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 40px;
-      padding: 20px;
-
-      button {
-        padding: 12px 24px;
-        font-size: 1rem;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-
-        mat-icon {
-          font-size: 1.2rem;
-          width: 1.2rem;
-          height: 1.2rem;
-          line-height: 1.2rem;
-        }
-
-        &:hover {
-          transform: translateY(-2px);
-        }
-      }
-    }
-
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+        margin: 0;
+        font-size: 0.85rem;
       }
     }
 
     @media (max-width: 768px) {
-      .level-selection-container {
-        padding: 20px 15px;
-      }
-
-      .header {
-        h1 {
-          font-size: 2rem;
-        }
-
-        p {
-          font-size: 1rem;
-        }
-      }
-
       .levels-grid {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 10px;
       }
 
       .level-card {
-        padding: 20px;
+        padding: 12px;
 
         .level-icon {
-          width: 60px;
-          height: 60px;
+          width: 40px;
+          height: 40px;
 
           mat-icon {
-            font-size: 2rem;
-            width: 2rem;
-            height: 2rem;
-            line-height: 2rem;
+            font-size: 1.4rem;
+            width: 1.4rem;
+            height: 1.4rem;
+            line-height: 1.4rem;
           }
         }
 
-        h2 {
-          font-size: 1.3rem;
+        h3 {
+          font-size: 1.1rem;
         }
 
-        .level-stats {
-          flex-direction: column;
-          gap: 10px;
-        }
-      }
-
-      .action-buttons {
-        flex-direction: column;
-        gap: 15px;
-
-        button {
-          width: 100%;
-          justify-content: center;
+        p {
+          font-size: 0.8rem;
         }
       }
     }
   `]
 })
-export class LevelSelectionComponent implements OnInit {
+export class LevelSelectionComponent {
   levels: string[] = ['Beginner', 'Intermediate', 'Advanced'];
   selectedLevel: string | null = null;
-  domain: string = '';
 
   constructor(
-    private router: Router,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private http: HttpClient
+    public dialogRef: MatDialogRef<LevelSelectionComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { domain: string },
+    private router: Router
   ) {}
 
-  ngOnInit() {
-    // Get domain from route state
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      const state = navigation.extras.state as { domain: string };
-      this.domain = state.domain;
-    }
-  }
-
   selectLevel(level: string) {
-    this.selectedLevel = level;
+    this.router.navigate(['/content-list'], {
+      queryParams: {
+        domain: this.data.domain,
+        level: level
+      }
+    });
+    this.dialogRef.close();
   }
 
   getLevelIcon(level: string): string {
@@ -306,7 +175,7 @@ export class LevelSelectionComponent implements OnInit {
       case 'Intermediate':
         return 'trending_up';
       case 'Advanced':
-        return 'workspace_premium';
+        return 'stars';
       default:
         return 'school';
     }
@@ -315,65 +184,13 @@ export class LevelSelectionComponent implements OnInit {
   getLevelDescription(level: string): string {
     switch (level) {
       case 'Beginner':
-        return 'Perfect for those new to the subject. Start with the basics and build a strong foundation.';
+        return 'Perfect for those new to the subject';
       case 'Intermediate':
-        return 'For learners with some experience. Dive deeper into concepts and practical applications.';
+        return 'For those with some prior knowledge';
       case 'Advanced':
-        return 'Challenging content for experienced learners. Master complex topics and advanced techniques.';
+        return 'For experienced learners';
       default:
         return '';
     }
-  }
-
-  getLevelVideos(level: string): number {
-    // Sample data - replace with actual API call
-    switch (level) {
-      case 'Beginner':
-        return 15;
-      case 'Intermediate':
-        return 20;
-      case 'Advanced':
-        return 25;
-      default:
-        return 0;
-    }
-  }
-
-  getLevelDocuments(level: string): number {
-    // Sample data - replace with actual API call
-    switch (level) {
-      case 'Beginner':
-        return 10;
-      case 'Intermediate':
-        return 15;
-      case 'Advanced':
-        return 20;
-      default:
-        return 0;
-    }
-  }
-
-  goBack() {
-    this.router.navigate(['/student-dashboard']);
-  }
-
-  proceed() {
-    if (!this.selectedLevel) {
-      this.snackBar.open('Please select a level', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Navigate to content list with selected level and domain
-    this.router.navigate(['/student-dashboard/content-list'], {
-      state: {
-        domain: this.domain,
-        level: this.selectedLevel
-      }
-    });
   }
 }

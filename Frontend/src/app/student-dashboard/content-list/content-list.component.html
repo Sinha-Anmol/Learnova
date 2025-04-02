@@ -1,47 +1,50 @@
 <!-- content-list.component.html -->
 <div class="content-container">
+  <div class="header">
     <h1>{{domain}} - {{level}} Resources</h1>
-    
-    <div *ngIf="loading" class="loading-spinner">
-      <mat-spinner></mat-spinner>
-      <p>Loading content...</p>
-    </div>
-  
-    <div *ngIf="error" class="error-message">
-      <mat-icon>error_outline</mat-icon>
-      <p>Failed to load content. Please try again later.</p>
-    </div>
-  
-    <div *ngIf="!loading && !error" class="content-grid">
-      <mat-card *ngFor="let item of content" class="content-card">
-        <mat-card-header>
-          <div mat-card-avatar>
-            <mat-icon>{{item.fileType.includes('pdf') ? 'picture_as_pdf' : 'ondemand_video'}}</mat-icon>
-          </div>
-          <mat-card-title>{{item.fileName}}</mat-card-title>
-          <mat-card-subtitle>{{item.domain}} • {{item.level}}</mat-card-subtitle>
-        </mat-card-header>
-        
-        <mat-card-content>
-          <p>{{item.shortDescription || 'No description available'}}</p>
-          <div class="file-meta">
-            <span><mat-icon>schedule</mat-icon> {{item.uploadedOn | date}}</span>
-            <span>
-              <mat-icon>description</mat-icon> 
-              {{(item.fileSize / (item.fileType.includes('pdf') ? 1024 : 1048576)).toFixed(2)}}
-              {{item.fileType.includes('pdf') ? 'KB' : 'MB'}}
-            </span>
-          </div>
-        </mat-card-content>
-  
-        <mat-card-actions>
-          <button mat-button color="primary" (click)="viewContent(item)">
-            <mat-icon>visibility</mat-icon> View
-          </button>
-          <button mat-button color="accent" (click)="downloadContent(item)">
-            <mat-icon>download</mat-icon> Download
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+    <p class="subtitle">Explore our curated collection of learning materials</p>
   </div>
+  
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Loading content...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error_outline</mat-icon>
+    <p>Failed to load content. Please try again later.</p>
+  </div>
+
+  <div *ngIf="!loading && !error" class="content-grid">
+    <mat-card *ngFor="let item of content" class="content-card">
+      <mat-card-header>
+        <div mat-card-avatar class="content-icon">
+          <mat-icon>{{item.fileType.includes('pdf') ? 'picture_as_pdf' : 'ondemand_video'}}</mat-icon>
+        </div>
+        <mat-card-title>{{item.fileName}}</mat-card-title>
+        <mat-card-subtitle>{{item.domain}} • {{item.level}}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p class="description">{{item.shortDescription || 'No description available'}}</p>
+        <div class="file-meta">
+          <span><mat-icon>schedule</mat-icon> {{item.uploadedOn | date}}</span>
+          <span>
+            <mat-icon>description</mat-icon> 
+            {{(item.fileSize / (item.fileType.includes('pdf') ? 1024 : 1048576)).toFixed(2)}}
+            {{item.fileType.includes('pdf') ? 'KB' : 'MB'}}
+          </span>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="viewContent(item)">
+          <mat-icon>visibility</mat-icon> View
+        </button>
+        <button mat-button color="accent" (click)="downloadContent(item)">
+          <mat-icon>download</mat-icon> Download
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
