@@ -275,14 +275,15 @@ namespace EduPortalAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("download/{id}")]
         public async Task<IActionResult> DownloadFile(int id)
         {
             try
             {
                 var file = await _context.MultimediaFiles.FindAsync(id);
-                if (file == null || file.UploadedBy != GetUserEmail())
-                    return NotFound("File not found or unauthorized");
+                if (file == null)
+                    return NotFound("File not found");
 
                 return File(file.FileData, file.FileType, file.FileName);
             }
