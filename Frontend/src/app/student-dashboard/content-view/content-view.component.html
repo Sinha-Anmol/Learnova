@@ -1,0 +1,85 @@
+<div class="content-view-container">
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner></mat-spinner>
+    <p>Loading content...</p>
+  </div>
+
+  <div *ngIf="error" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <p>Failed to load content. Please try again later.</p>
+  </div>
+
+  <ng-container *ngIf="!loading && !error && content">
+    <div class="content-wrapper">
+      <div class="header">
+        <h1>{{(content.fileName || '').split('.').slice(0, -1).join('.')}}</h1>
+        <p class="description">{{content.shortDescription || 'No description available'}}</p>
+      </div>
+
+      <div class="content-player">
+        <!-- Video Player -->
+        <video *ngIf="content?.fileType?.startsWith('video/')" 
+               controls 
+               class="video-player">
+          <source [src]="contentUrl" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+
+        <!-- PDF Viewer (Updated to use Blob URL) -->
+        <div *ngIf="content?.fileType?.startsWith('application/pdf')" class="pdf-viewer">
+          <ngx-extended-pdf-viewer 
+            *ngIf="contentUrl"
+            [src]="contentUrl"
+            [height]="'600px'"
+            [textLayer]="true"
+            [handTool]="true">
+          </ngx-extended-pdf-viewer>
+        </div>
+      </div>
+
+      <!-- <pdf-viewer [src]="contentUrl"
+              [render-text]="true"
+              [original-size]="false"
+              style="width: 400px; height: 500px">
+            </pdf-viewer> -->
+
+      <div class="sections-container">
+        <!-- What You'll Learn Section -->
+        <section class="learning-section">
+          <h2>What You'll Learn</h2>
+          <div class="learning-points">
+            <div class="point">
+              <mat-icon>check_circle</mat-icon>
+              <span>Understanding core concepts and fundamentals</span>
+            </div>
+            <div class="point">
+              <mat-icon>check_circle</mat-icon>
+              <span>Practical implementation techniques</span>
+            </div>
+            <div class="point">
+              <mat-icon>check_circle</mat-icon>
+              <span>Best practices and industry standards</span>
+            </div>
+            <div class="point">
+              <mat-icon>check_circle</mat-icon>
+              <span>Real-world application scenarios</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Certificate Section -->
+        <section class="certificate-section">
+          <h2>Get Your Completion Certificate</h2>
+          <p>Complete this course to earn your certificate of completion</p>
+          <div class="certificate-preview">
+            <img src="/Certificate.png" alt="Certificate Preview">
+          </div>
+          <button mat-raised-button color="primary" class="get-certificate-btn" (click)="getCertificate()">
+            <mat-icon>workspace_premium</mat-icon>
+            Get Certificate
+          </button>
+        </section>
+      </div>
+    </div>
+  </ng-container>
+</div>

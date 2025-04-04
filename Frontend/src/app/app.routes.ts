@@ -11,6 +11,8 @@ import { VideoUploadComponent } from './teacher-dashboard/video-upload/video-upl
 import { VideoListComponent } from './student-dashboard/video-list/video-list.component';
 import { PdfListComponent } from './student-dashboard/pdf-list/pdf-list.component';
 import { ContentListComponent } from './student-dashboard/content-list/content-list.component';
+import { ContentViewComponent } from './student-dashboard/content-view/content-view.component';
+import { AnalysisSComponent } from './student-dashboard/analysis-s/analysis-s.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -34,6 +36,12 @@ export const routes: Routes = [
   { path: 'student-dashboard/videos', component: VideoListComponent },
   { path: 'student-dashboard/pdfs', component: PdfListComponent },
   { path: 'content-list', component: ContentListComponent },
+  { path: 'content/:id', component: ContentViewComponent },
+  { path: 'student-dashboard/analysisS', component: AnalysisSComponent },
+  {
+    path: 'student-dashboard/content-view/:id',
+    component: ContentViewComponent
+  },
   { path: '', redirectTo: 'student-dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '' }
 ];

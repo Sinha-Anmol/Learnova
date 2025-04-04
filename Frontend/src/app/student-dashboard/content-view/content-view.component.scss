@@ -1,0 +1,214 @@
+.content-view-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+  padding: 40px 20px;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+
+  .header {
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+    animation: fadeInDown 0.5s ease-out;
+
+    h1 {
+      font-size: 2.4rem;
+      margin: 0;
+      background: linear-gradient(45deg, #00BCD4, #03A9F4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .description {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+  }
+
+  .content-player {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    .video-player {
+      width: 100%;
+      max-height: 600px;
+      background: #000;
+    }
+
+    .pdf-viewer {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  }
+
+  .sections-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    padding: 0 20px;
+
+    section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 24px;
+      animation: fadeInUp 0.5s ease-out;
+      height: fit-content;
+
+      h2 {
+        font-size: 1.8rem;
+        margin: 0 0 20px;
+        color: #00BCD4;
+      }
+    }
+
+    .learning-section {
+      .learning-points {
+        display: grid;
+        gap: 16px;
+
+        .point {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          
+          mat-icon {
+            color: #00BCD4;
+          }
+
+          span {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+
+    .certificate-section {
+      text-align: center;
+
+      p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 24px;
+      }
+
+      .certificate-preview {
+        margin: 20px auto;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 188, 212, 0.2);
+        max-width: 400px;
+        
+        img {
+          width: 100%;
+          height: auto;
+          display: block;
+          object-fit: contain;
+        }
+      }
+
+      .get-certificate-btn {
+        background: linear-gradient(45deg, #00BCD4, #03A9F4);
+        color: white;
+        padding: 8px 24px;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 20px rgba(0, 188, 212, 0.4);
+        }
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .content-view-container {
+    padding: 20px 15px;
+
+    .header {
+      padding: 0 15px;
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .description {
+        font-size: 1rem;
+      }
+    }
+
+    .sections-container {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 0 15px;
+
+      section {
+        padding: 20px;
+
+        h2 {
+          font-size: 1.5rem;
+        }
+      }
+
+      .learning-section {
+        .learning-points {
+          gap: 12px;
+
+          .point span {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .certificate-section {
+        .certificate-preview {
+          max-width: 100%;
+        }
+
+        .get-certificate-btn {
+          width: 100%;
+          margin-top: 16px;
+        }
+      }
+    }
+  }
+} 

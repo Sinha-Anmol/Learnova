@@ -1,235 +1,231 @@
-@import './student-dashboard.component';
-// Extending the dashboard styles
-.dashboard-container {
-    // Domains section
-    .domains-section {
-      width: 100%;
-      margin-top: 40px;
-      animation: fadeInUp 0.5s ease-out;
-  
-      h2 {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-        color: $text-color;
+@forward './student-dashboard.component';
+.domains-section {
+  width: 100%;
+  margin-top: 40px;
+  animation: fadeInUp 0.5s ease-out;
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: $text-color;
+    text-align: center;
+  }
+
+  .domains-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    .domain-card {
+      background: $card-background;
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      border: 1px solid $border-color;
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
+        background-color: $hover-color;
+        border-color: $primary-color;
+      }
+
+      mat-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-      }
-  
-      .domains-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-  
-        .domain-card {
-          background: $card-background;
-          border-radius: 16px;
-          padding: 20px;
-          transition: all 0.3s ease;
-          cursor: pointer;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-          text-align: center;
-          border: 1px solid $border-color;
-          backdrop-filter: blur(5px);
+        flex-direction: column;
+        padding: 0;
+        width: 100%;
+
+        div[mat-card-avatar] {
           display: flex;
-          flex-direction: column;
           align-items: center;
-  
-          &:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
-            background-color: $hover-color;
-            border-color: $primary-color;
-          }
-  
-          mat-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            flex-direction: column;
-            padding: 0;
-            width: 100%;
-  
-            div[mat-card-avatar] {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 70px;
-              height: 70px;
-              background: rgba(0, 188, 212, 0.1);
-              border-radius: 50%;
-              margin: 0 auto;
-              border: 2px solid rgba(0, 188, 212, 0.3);
-              transition: all 0.3s ease;
-  
-              &:hover {
-                border-color: $primary-color;
-                transform: scale(1.05);
-              }
-  
-              mat-icon {
-                font-size: 2.5rem;
-                width: 2.5rem;
-                height: 2.5rem;
-                line-height: 2.5rem;
-                color: $primary-color;
-                transition: all 0.3s ease;
-              }
-            }
-          }
-  
-          mat-card-content {
-            margin-top: 15px;
-            width: 100%;
-  
-            .domain-description {
-              color: rgba(255, 255, 255, 0.7);
-              margin-bottom: 15px;
-              text-align: center;
-            }
-  
-            .domain-stats {
-              display: flex;
-              justify-content: center;
-              gap: 20px;
-              color: rgba(255, 255, 255, 0.6);
-              font-size: 0.9rem;
-  
-              span {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-  
-                mat-icon {
-                  font-size: 1.2rem;
-                  width: 1.2rem;
-                  height: 1.2rem;
-                  line-height: 1.2rem;
-                  color: $primary-color;
-                }
-              }
-            }
-          }
-  
-          mat-card-title {
-            font-size: 1.4rem;
-            font-weight: 500;
-            margin-top: 15px;
-            color: $text-color;
-            transition: color 0.3s ease;
-            text-align: center;
-          }
-  
-          &:hover mat-icon {
-            color: $secondary-color;
-            transform: scale(1.1);
-          }
-  
-          &:hover mat-card-title {
-            color: $primary-color;
-          }
-        }
-      }
-    }
-  
-    // Achievements section
-    .achievements-section {
-      width: 100%;
-      margin-top: 40px;
-      animation: fadeInUp 0.5s ease-out;
-  
-      h2 {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-        color: $text-color;
-      }
-  
-      .achievements-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-  
-        .achievement-card {
-          background: $card-background;
-          border-radius: 16px;
-          padding: 20px;
-          text-align: center;
-          border: 1px solid $border-color;
+          justify-content: center;
+          width: 70px;
+          height: 70px;
+          background: rgba(0, 188, 212, 0.1);
+          border-radius: 50%;
+          margin: 0 auto;
+          border: 2px solid rgba(0, 188, 212, 0.3);
           transition: all 0.3s ease;
-  
+
           &:hover {
-            transform: translateY(-5px);
             border-color: $primary-color;
-            box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
+            transform: scale(1.05);
           }
-  
+
           mat-icon {
             font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
             color: $primary-color;
-            margin-bottom: 15px;
-            transition: transform 0.3s ease;
-          }
-  
-          h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            color: $text-color;
-          }
-  
-          p {
-            margin: 10px 0 0;
-            color: rgba(255, 255, 255, 0.7);
-          }
-  
-          &:hover mat-icon {
-            transform: scale(1.1);
+            transition: all 0.3s ease;
           }
         }
       }
-    }
-  }
-  
-  // Responsive adjustments for extended content
-  @media (max-width: 1200px) {
-    .domains-section .domains-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .domains-section .domains-grid {
-      grid-template-columns: 1fr;
-      width: 100%;
-      gap: 15px;
-      padding: 10px;
-  
-      .domain-card {
-        padding: 15px;
-  
-        mat-card-header {
-          div[mat-card-avatar] {
-            width: 60px;
-            height: 60px;
-  
+
+      mat-card-content {
+        margin-top: 15px;
+        width: 100%;
+
+        .domain-description {
+          color: rgba(255, 255, 255, 0.7);
+          margin-bottom: 15px;
+          text-align: center;
+        }
+
+        .domain-stats {
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.9rem;
+
+          span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
             mat-icon {
-              font-size: 2rem;
-              width: 2rem;
-              height: 2rem;
-              line-height: 2rem;
+              font-size: 1.2rem;
+              width: 1.2rem;
+              height: 1.2rem;
+              line-height: 1.2rem;
+              color: $primary-color;
             }
           }
         }
-  
-        mat-card-title {
-          font-size: 1.2rem;
-        }
-  
-        .domain-stats {
-          flex-direction: column;
-          gap: 10px;
-        }
+      }
+
+      mat-card-title {
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-top: 15px;
+        color: $text-color;
+        transition: color 0.3s ease;
+        text-align: center;
+      }
+
+      &:hover mat-icon {
+        color: $secondary-color;
+        transform: scale(1.1);
+      }
+
+      &:hover mat-card-title {
+        color: $primary-color;
       }
     }
   }
+}
+
+// Achievements Section
+.achievements-section {
+  width: 100%;
+  margin-top: 40px;
+  animation: fadeInUp 0.5s ease-out;
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: $text-color;
+  }
+
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+
+    .achievement-card {
+      background: $card-background;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid $border-color;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        border-color: $primary-color;
+        box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
+      }
+
+      mat-icon {
+        font-size: 2.5rem;
+        color: $primary-color;
+        margin-bottom: 15px;
+        transition: transform 0.3s ease;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: $text-color;
+      }
+
+      p {
+        margin: 10px 0 0;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      &:hover mat-icon {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// Extended Responsive Styles
+@media (max-width: 1200px) {
+  .domains-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .domains-grid {
+    grid-template-columns: 1fr !important;
+    width: 100%;
+    gap: 15px;
+    padding: 10px;
+
+    .domain-card {
+      padding: 15px;
+
+      mat-card-header {
+        div[mat-card-avatar] {
+          width: 60px;
+          height: 60px;
+
+          mat-icon {
+            font-size: 2rem;
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+          }
+        }
+      }
+
+      mat-card-title {
+        font-size: 1.2rem;
+      }
+
+      .domain-stats {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  }
+}

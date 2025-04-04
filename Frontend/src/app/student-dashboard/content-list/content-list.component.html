@@ -16,7 +16,7 @@
   </div>
 
   <div *ngIf="!loading && !error" class="content-grid">
-    <mat-card *ngFor="let item of content" class="content-card">
+    <mat-card *ngFor="let item of contents" class="content-card" (click)="viewContent(item)">
       <mat-card-header>
         <div mat-card-avatar class="content-icon">
           <mat-icon>{{item.fileType.includes('pdf') ? 'picture_as_pdf' : 'ondemand_video'}}</mat-icon>
@@ -38,7 +38,7 @@
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-button color="primary" (click)="viewContent(item)">
+        <button mat-button color="primary" (click)="viewContent(item); $event.stopPropagation()">
           <mat-icon>visibility</mat-icon> View
         </button>
         <button mat-button color="accent" (click)="downloadContent(item)">

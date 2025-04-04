@@ -4,46 +4,24 @@
       <h1>Welcome Back!</h1>
       <p class="subtitle">Continue your learning journey</p>
     </div>
-    <div class="header-stats">
-      <div class="stat-item">
-        <mat-icon>school</mat-icon>
-        <span>Learning Streak: 7 days</span>
-      </div>
-      <div class="stat-item">
-        <mat-icon>star</mat-icon>
-        <span>Points: 1250</span>
-      </div>
-    </div>
   </header>
 
-  <div class="featured-section">
-    <h2>Continue Learning</h2>
-    <div class="featured-content">
-      <div class="featured-card">
-        <div class="progress-ring">
-          <mat-icon>play_circle</mat-icon>
-        </div>
-        <div class="content">
-          <h3>Last Watched</h3>
-          <p>Advanced JavaScript Concepts</p>
-          <div class="progress-bar">
-            <div class="progress" style="width: 75%"></div>
-          </div>
-        </div>
+  <div class="analysis-section" (click)="navigateToAnalysis()">
+    <div class="analysis-content">
+      <div class="analysis-text">
+        <h2>Analysis and Performance</h2>
+        <p>Track your progress and insights</p>
       </div>
-      <div class="featured-card">
-        <div class="progress-ring">
-          <mat-icon>description</mat-icon>
+      <div class="analysis-icons">
+        <div class="icon-wrapper primary">
+          <mat-icon>analytics</mat-icon>
         </div>
-        <div class="content">
-          <h3>Recent Document</h3>
-          <p>Python Programming Guide</p>
-          <div class="progress-bar">
-            <div class="progress" style="width: 60%"></div>
-          </div>
+        <div class="icon-wrapper secondary">
+          <mat-icon>trending_up</mat-icon>
         </div>
       </div>
     </div>
+    <div class="hover-effect"></div>
   </div>
 
   <div class="domains-section">
@@ -66,27 +44,6 @@
           </div>
         </mat-card-content>
       </mat-card>
-    </div>
-  </div>
-
-  <div class="achievements-section">
-    <h2>Your Achievements</h2>
-    <div class="achievements-grid">
-      <div class="achievement-card">
-        <mat-icon>emoji_events</mat-icon>
-        <h3>Quick Learner</h3>
-        <p>Completed 5 courses in a week</p>
-      </div>
-      <div class="achievement-card">
-        <mat-icon>stars</mat-icon>
-        <h3>Consistent</h3>
-        <p>7-day learning streak</p>
-      </div>
-      <div class="achievement-card">
-        <mat-icon>workspace_premium</mat-icon>
-        <h3>Expert</h3>
-        <p>Mastered 3 domains</p>
-      </div>
     </div>
   </div>
 </div>

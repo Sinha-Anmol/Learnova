@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { LevelSelectionComponent } from './level-selection/level-selection.component';
 import { CommonModule } from '@angular/common';
@@ -13,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './student-dashboard.component.html',
   styleUrls: ['./student-dashboard.component.scss']
 })
-export class StudentDashboardComponent {
+export class StudentDashboardComponent implements OnInit {
   domains = [
     { name: 'FullStack', icon: 'code' },
     { name: 'Frontend', icon: 'web' },
@@ -23,12 +24,21 @@ export class StudentDashboardComponent {
     { name: 'Cloud', icon: 'public' }
   ];
 
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {}
 
   openLevelSelection(domain: string) {
     this.dialog.open(LevelSelectionComponent, {
       data: { domain },
       width: '400px'
     });
+  }
+
+  navigateToAnalysis() {
+    this.router.navigate(['/student-dashboard/analysisS']);
   }
 }
