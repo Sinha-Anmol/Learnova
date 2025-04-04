@@ -16,7 +16,6 @@ namespace EduPortalAPI.Data
         public DbSet<CommentReply> CommentReplies { get; set; }
         public DbSet<TaskModel> Tasks { get; set; }
         public DbSet<MultimediaFile> MultimediaFiles { get; set; }
-
-
+        public DbSet<VideoAnalysis> VideoAnalysis { get; set; }
     }
 }
