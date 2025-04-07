@@ -4,6 +4,7 @@ using EduPortalAPI.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EduPortalAPI.Controllers
 {
@@ -16,6 +17,25 @@ namespace EduPortalAPI.Controllers
         public AnalyticsController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        // GET: api/Analytics/GetUserIdByEmail?email=user@example.com (Anonymous)
+        [HttpGet("GetUserIdByEmail")]
+        [AllowAnonymous]  // No authentication required
+        public async Task<IActionResult> GetUserIdByEmail([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Email is required.");
+
+            var user = await _context.Users
+                .Where(u => u.Email == email)
+                .Select(u => new { u.Id, u.Email })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(new { userId = user.Id });
         }
 
         // POST: api/Analytics (Save Video Watch Progress)
