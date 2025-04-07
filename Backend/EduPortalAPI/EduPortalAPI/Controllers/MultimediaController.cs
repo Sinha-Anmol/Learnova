@@ -324,6 +324,41 @@ namespace EduPortalAPI.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("file-by-id/{id}")]  // Changed route to include ID parameter
+        [AllowAnonymous] // Still open (no auth required)
+        public IActionResult GetFileById(int id)  // Takes ID as route parameter
+        {
+            try
+            {
+                // Find the file with the matching ID
+                var file = _context.MultimediaFiles
+                    .Where(f => f.Id == id)  // Filter by ID
+                    .Select(f => new {
+                        f.Id,
+                        f.FileName,
+                        f.FileType,
+                        f.ShortDescription,
+                        f.Domain,
+                        f.Level,
+                        f.UploadedOn,
+                        FileSize = f.FileData.Length,
+                    })
+                    .FirstOrDefault();  // Get single record or null
+
+                if (file == null)
+                {
+                    return NotFound($"File with ID {id} not found.");  // 404 if ID doesn't exist
+                }
+
+                return Ok(file);  // 200 OK with file data
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error fetching file with ID {id}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 
     public enum ContentDomain
