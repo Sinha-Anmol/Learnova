@@ -78,5 +78,35 @@ namespace EduPortalAPI.Controllers
 
             return Ok(videoAnalysis);
         }
+
+        [HttpGet("domain-files")]
+        [AllowAnonymous]
+        public IActionResult GetFilesByDomain(
+        [FromQuery] string domain,
+        [FromQuery] string? level = null)
+        {
+            if (!Enum.TryParse<ContentDomain>(domain, out _))
+                return BadRequest("Invalid domain");
+
+            var query = _context.MultimediaFiles
+                .Where(f => f.Domain == domain);
+
+            if (!string.IsNullOrEmpty(level))
+                query = query.Where(f => f.Level == level);
+
+            var files = query.OrderByDescending(f => f.UploadedOn)
+                .Select(f => new {
+                    f.Id,
+                    f.FileName,
+                    f.FileType,
+                    f.ShortDescription,
+                    f.Level,
+                    f.UploadedOn,
+                    FileSize = f.FileData.Length
+                })
+                .ToList();
+
+            return Ok(files);
+        }
     }
 }
