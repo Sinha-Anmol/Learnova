@@ -3,7 +3,7 @@ name: Deploy Angular App to S3
 on:
   push:
     branches:
-      - main  # Trigger deployment when you push to main
+      - main
 
 jobs:
   deploy:
@@ -22,14 +22,15 @@ jobs:
         run: npm install
 
       - name: Build Angular App
-        run: npm run build -- --configuration production
+        run: npm run build -- --configuration production --base-href=/
 
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --delete
-          source_dir: dist/learnova/browser   # ✅ Correct path to your static files
+          source_dir: dist/learnova/browser
+          destination_dir: /  
         env:
-          AWS_S3_BUCKET: e-learn-fe           # ✅ Your S3 bucket name
+          AWS_S3_BUCKET: e-learn-fe
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
