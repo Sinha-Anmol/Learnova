@@ -1,21 +1,82 @@
+<!-- analysis-s.component.html -->
 <div class="analysis-container">
+  <div class="analysis-top-bar">
+    <div class="top-bar-content">
+      <h2 class="analysis-board-title">
+        <mat-icon>dashboard</mat-icon>
+        Analysis Board
+      </h2>
+      
+    </div>
+  </div>
+
   <div class="analysis-header">
     <h1>Analysis & Performance</h1>
     <p>Track your learning progress and insights</p>
   </div>
 
   <div class="analysis-icons">
-    <div class="icon-wrapper primary">
-      <mat-icon>analytics</mat-icon>
-      <span>Analytics</span>
-    </div>
-    <div class="icon-wrapper secondary">
-      <mat-icon>trending_up</mat-icon>
-      <span>Progress</span>
-    </div>
-    <div class="icon-wrapper accent">
+    <div class="icon-wrapper accent" (click)="toggleReports()">
       <mat-icon>assessment</mat-icon>
       <span>Reports</span>
     </div>
   </div>
-</div> 
+
+  <div class="reports-container" *ngIf="showReports">
+    <div class="reports-header">
+      <h2>Completed Courses</h2>
+      <p class="reports-subtitle">Your learning achievements</p>
+    </div>
+    <div *ngIf="completedCourses.length > 0; else noCourses" class="completed-courses-list">
+      <div *ngFor="let course of completedCourses" class="course-card">
+        <h3 class="course-title">{{course.domain}} - {{course.level}}</h3>
+        <div class="course-meta">
+          <span class="domain-tag">{{course.domain}}</span>
+          <span class="level-tag">{{course.level}}</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #noCourses>
+      <div class="empty-state">
+        <mat-icon>school</mat-icon>
+        <p>No courses completed yet</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="dashboard">
+    <h1>Your Learning Progress</h1>
+    
+    <div class="domains-container">
+      <div *ngFor="let domain of domains" class="domain-card">
+        <h2 (click)="selectedDomain = domain">{{domain}}</h2>
+        
+        <div class="levels-container" *ngIf="selectedDomain === domain">
+          <div *ngFor="let level of levels" 
+               class="level-progress"
+               (click)="selectDomainLevel(domain, level)">
+            
+            <div class="level-header">{{level}}</div>
+            
+            <div *ngIf="selectedLevel === level">
+              <div *ngIf="isEnrolled(domain, level); else notEnrolled" 
+                   class="progress-ring" 
+                   [style.--percentage]="getProgress(domain, level)"
+                   [style.--color]="getColor(getProgress(domain, level))">
+                <span class="percentage">{{getProgress(domain, level) | number:'1.0-0'}}%</span>
+              </div>
+              
+              <ng-template #notEnrolled>
+                <div class="not-enrolled">Not enrolled</div>
+              </ng-template>
+              
+              <div class="video-name" *ngIf="isEnrolled(domain, level)">
+                {{getVideoName(domain, level)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

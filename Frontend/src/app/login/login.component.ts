@@ -82,7 +82,7 @@ export class LoginComponent {
           this.isLoading = false;
           // Store the token
           localStorage.setItem('authToken', response.token);
-          
+          localStorage.setItem('userEmail', this.loginForm.get('email')?.value);
           // Redirect based on role
           const role = this.loginForm.get('role')?.value;
           if (role === 'student') {

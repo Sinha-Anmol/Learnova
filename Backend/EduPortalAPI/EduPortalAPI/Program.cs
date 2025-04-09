@@ -36,7 +36,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:4200",
-            "https://learnovaedu.netlify.app"  // Added Netlify domain
+            "https://learnovaedu.netlify.app",
+             "http://e-learn-fe.s3-website.ap-south-1.amazonaws.com"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
