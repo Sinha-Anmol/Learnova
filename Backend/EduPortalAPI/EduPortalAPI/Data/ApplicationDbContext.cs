@@ -17,5 +17,6 @@ namespace EduPortalAPI.Data
         public DbSet<TaskModel> Tasks { get; set; }
         public DbSet<MultimediaFile> MultimediaFiles { get; set; }
         public DbSet<VideoAnalysis> VideoAnalysis { get; set; }
+        public DbSet<CompletedCourse> CompletedCourses { get; set; }
     }
 }

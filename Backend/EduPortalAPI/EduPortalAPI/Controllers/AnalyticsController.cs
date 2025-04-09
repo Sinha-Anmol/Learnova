@@ -108,5 +108,44 @@ namespace EduPortalAPI.Controllers
 
             return Ok(files);
         }
+
+        [HttpGet("completed-courses/{userId}")]
+        [AllowAnonymous]
+        public IActionResult GetCompletedCourses(int userId)
+        {
+            var completedVideoIds = _context.VideoAnalysis
+                .Where(v => v.UserId == userId && v.PercentageWatched > 95)
+                .Select(v => v.VideoId)
+                .ToList();
+
+            if (!completedVideoIds.Any())
+                return Ok(new List<object>());
+
+            var completedFiles = _context.MultimediaFiles
+                .Where(f => completedVideoIds.Contains(f.Id))
+                .Select(f => new {
+                    f.Id,
+                    f.FileName,
+                    f.Domain,
+                    f.Level
+                })
+                .ToList();
+
+            foreach (var file in completedFiles)
+            {
+                if (!_context.CompletedCourses.Any(c => c.UserId == userId && c.Domain == file.Domain && c.Level == file.Level))
+                {
+                    _context.CompletedCourses.Add(new CompletedCourse
+                    {
+                        UserId = userId,
+                        Domain = file.Domain,
+                        Level = file.Level
+                    });
+                }
+            }
+
+            _context.SaveChanges();
+            return Ok(completedFiles);
+        }
     }
 }
