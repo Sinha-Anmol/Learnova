@@ -1,4 +1,14 @@
-@forward './student-dashboard.component';
+$primary-color: #00BCD4; // Teal
+$secondary-color: #03A9F4; // Light Blue
+$accent-color: #7C4DFF; // Purple
+$background-color: #1a1a1a; // Dark background
+$text-color: #ffffff;
+$card-background: rgba(255, 255, 255, 0.05); // Semi-transparent white
+$hover-color: rgba(0, 188, 212, 0.1); // Teal with opacity
+$border-color: rgba(255, 255, 255, 0.1);
+$gradient-1: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+$gradient-2: linear-gradient(45deg, $primary-color, $secondary-color);
+
 .domains-section {
   width: 100%;
   margin-top: 40px;
@@ -131,72 +141,78 @@
   }
 }
 
-// Achievements Section
-.achievements-section {
-  width: 100%;
-  margin-top: 40px;
-  animation: fadeInUp 0.5s ease-out;
 
-  h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: $text-color;
-  }
-
-  .achievements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-
-    .achievement-card {
-      background: $card-background;
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid $border-color;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-5px);
-        border-color: $primary-color;
-        box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
-      }
-
-      mat-icon {
-        font-size: 2.5rem;
-        color: $primary-color;
-        margin-bottom: 15px;
-        transition: transform 0.3s ease;
-      }
-
-      h3 {
-        margin: 0;
-        font-size: 1.2rem;
-        color: $text-color;
-      }
-
-      p {
-        margin: 10px 0 0;
-        color: rgba(255, 255, 255, 0.7);
-      }
-
-      &:hover mat-icon {
-        transform: scale(1.1);
-      }
-    }
-  }
+@keyframes fadeInDown {
+from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+to {
+  opacity: 1;
+  transform: translateY(0);
+}
 }
 
-// Extended Responsive Styles
+@keyframes fadeInUp {
+from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+to {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
+
+@keyframes pulse {
+0% {
+  transform: scale(1);
+}
+50% {
+  transform: scale(1.05);
+}
+100% {
+  transform: scale(1);
+}
+}
+
+// Responsive adjustments
 @media (max-width: 1200px) {
-  .domains-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+.domains-section .domains-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
 }
 
 @media (max-width: 768px) {
-  .domains-grid {
-    grid-template-columns: 1fr !important;
+.dashboard-container {
+  padding: 15px;
+
+  .dashboard-header {
+    padding: 20px;
+
+    .header-content h1 {
+      font-size: 2rem;
+    }
+
+    .header-stats {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+
+  .featured-section,
+  .domains-section {
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .featured-content {
+    grid-template-columns: 1fr;
+  }
+
+  .domains-section .domains-grid {
+    grid-template-columns: 1fr;
     width: 100%;
     gap: 15px;
     padding: 10px;
@@ -228,4 +244,5 @@
       }
     }
   }
+}
 }

@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './student-dashboard.component.html',
-  styleUrls: ['./student-dashboard.component.scss']
+  styleUrls: ['./student-dashboard.component.scss', './student-dashboard-extend.scss']
 })
 export class StudentDashboardComponent implements OnInit {
   domains = [

@@ -37,7 +37,7 @@ interface Activity {
     MatMenuModule
   ],
   templateUrl: './teacher-dashboard.component.html',
-  styleUrls: ['./teacher-dashboard.component.scss']
+  styleUrls: ['./teacher-dashboard.component.scss', './teacher-dashboard-extend.component.scss']
 })
 export class TeacherDashboardComponent implements OnInit {
   stats = {
