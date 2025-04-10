@@ -38,8 +38,8 @@
             "scripts": [],
             "server": "src/main.server.ts",
             "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts",
+            "ssr": true,
+            "prerender": {
               "routes": [
                 "/",
                 "/login",
