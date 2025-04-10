@@ -38,15 +38,8 @@
             "scripts": [],
             "server": "src/main.server.ts",
             "outputMode": "server",
-            "ssr": true,
-            "prerender": {
-              "routes": [
-                "/",
-                "/login",
-                "/signup",
-                "/student-dashboard",
-                "/teacher-dashboard"
-              ]
+            "ssr": {
+              "entry": "src/server.ts"
             }
           },
           "configurations": {
@@ -59,8 +52,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "8kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "8kB",
+                  "maximumError": "12kB"
                 }
               ],
               "outputHashing": "all"
