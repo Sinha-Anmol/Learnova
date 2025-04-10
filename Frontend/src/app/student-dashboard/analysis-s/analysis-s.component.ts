@@ -24,7 +24,7 @@ interface CompletedCourse {
   standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './analysis-s.component.html',
-  styleUrls: ['./analysis-s.component.scss']
+  styleUrls: ['./analysis-s.component.scss', './analysis-s2.component.scss']
 })
 export class AnalysisSComponent {
   domains = ['FullStack', 'Frontend', 'Backend', 'DevOps', 'QualityAssurance', 'Cloud'];
