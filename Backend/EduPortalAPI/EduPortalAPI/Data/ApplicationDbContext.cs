@@ -18,5 +18,6 @@ namespace EduPortalAPI.Data
         public DbSet<MultimediaFile> MultimediaFiles { get; set; }
         public DbSet<VideoAnalysis> VideoAnalysis { get; set; }
         public DbSet<CompletedCourse> CompletedCourses { get; set; }
+        public DbSet<AwsVideo> AwsVideos { get; set; }
     }
 }

@@ -8,6 +8,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
 // Configure file upload limits
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {

@@ -76,6 +76,12 @@ public class AuthController : ControllerBase
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        return Ok(new { message = "Logged out successfully" });
+    }
 }
 
 public class UserLoginDto
