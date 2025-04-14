@@ -59,7 +59,6 @@ export class TeacherDashboardComponent implements OnInit {
   selectedLevel = '';
 
   teacherName: string = ''; // Will be set from email
-  totalStudents: number = 0;
   totalCourses: number = 0;
   totalVideos: number = 0;
   totalDocuments: number = 0;
@@ -109,9 +108,6 @@ export class TeacherDashboardComponent implements OnInit {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) 
     }).subscribe({
       next: (data: any) => {
-        // Set total students to 0 as requested
-        this.totalStudents = 0;
-        
         // Count videos and documents from the API response
         this.totalVideos = data.filter((file: any) => file.fileType.includes('video')).length;
         this.totalDocuments = data.filter((file: any) => file.fileType.includes('pdf')).length;
@@ -182,8 +178,6 @@ export class TeacherDashboardComponent implements OnInit {
 
   private loadDashboardData(): void {
     // TODO: Replace with actual API calls
-    this.totalStudents = 0;
-    this.totalCourses = 0;
     this.totalVideos = 0;
     this.totalDocuments = 0;
 

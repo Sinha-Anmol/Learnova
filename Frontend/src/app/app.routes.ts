@@ -13,6 +13,7 @@ import { PdfListComponent } from './student-dashboard/pdf-list/pdf-list.componen
 import { ContentListComponent } from './student-dashboard/content-list/content-list.component';
 import { ContentViewComponent } from './student-dashboard/content-view/content-view.component';
 import { AnalysisSComponent } from './student-dashboard/analysis-s/analysis-s.component';
+import { CloudSupportComponent } from './teacher-dashboard/cloud-support/cloud-support.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -26,6 +27,7 @@ export const routes: Routes = [
   },
   { path: 'teacher/pdf-upload', component: PdfUploadComponent },
   { path: 'teacher/video-upload', component: VideoUploadComponent },
+  { path: 'teacher/cloud-support', component: CloudSupportComponent },
   {
     path: 'student',
     component: StudentDashboardComponent,
