@@ -462,11 +462,12 @@ $gradient-2: linear-gradient(45deg, $primary-color, $secondary-color);
   }
 
   .logout-button {
-    color: #000000;
-    background-color: #3fbbc4;
+    color: #ffffff;
+    background-color: #ff0000;
     display: flex;
     align-items: center;
     gap: 8px;
+    
   }
 }
 

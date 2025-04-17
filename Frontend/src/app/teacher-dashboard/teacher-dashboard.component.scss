@@ -81,7 +81,7 @@ $text-light: #666666;
         }
 
         button {
-          color: #020000;
+          color: #ffffff;
           transition: color 0.3s ease;
 
           &:hover {
@@ -91,7 +91,8 @@ $text-light: #666666;
       }
 
       .logout-button {
-        background-color: #57cfc7;
+        color: #ffffff;
+        background-color: #ff0000;
         display: flex;
         align-items: center;
         gap: 8px;

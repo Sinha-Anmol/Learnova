@@ -47,7 +47,8 @@ export class SignupComponent {
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['student', Validators.required]
+      role: ['student', Validators.required],
+      phno: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]
     });
   }
 

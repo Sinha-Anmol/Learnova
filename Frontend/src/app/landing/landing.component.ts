@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { FooterComponent } from "../footer/footer.component";
 
 interface Course {
   id: number;
@@ -27,8 +28,8 @@ interface Course {
     MatButtonModule,
     MatChipsModule,
     RouterLink,
-    MatIconModule
-  ],
+    MatIconModule,
+],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })

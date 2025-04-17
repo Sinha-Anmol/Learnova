@@ -87,7 +87,7 @@ export class LoginComponent {
           const role = this.loginForm.get('role')?.value;
           if (role === 'student') {
             this.router.navigate(['/student']);
-          } else if (role === 'Teacher') {
+          } else if (role === 'teacher') {
             this.router.navigate(['/teacher']);
           }
         },
