@@ -8,6 +8,6 @@
         public string Password { get; set; } = string.Empty; // Add this field
         public string PasswordHash { get; set; } = string.Empty;
         public string Role { get; set; } = "Student"; // Student, Teacher, Admin
-        public int phno { get; set; }
+        public string phno { get; set; } = string.Empty;
     }
 }
