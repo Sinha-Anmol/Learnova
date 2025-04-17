@@ -1,0 +1,194 @@
+$primary-color: #FF9800;
+$secondary-color: #F57C00;
+$background-color: #1a1a1a;
+$text-color: #ffffff;
+$card-background: rgba(255, 255, 255, 0.05);
+$border-color: rgba(255, 255, 255, 0.1);
+$gradient-1: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+$gradient-2: linear-gradient(45deg, $primary-color, $secondary-color);
+
+.premium-videos-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: $gradient-1;
+  min-height: 100vh;
+  color: $text-color;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: $gradient-2;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+    animation: textGlow 2s infinite;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2rem;
+  }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    perspective: 1000px;
+  }
+
+  .video-card {
+    background: $card-background;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid $border-color;
+    transform-style: preserve-3d;
+
+    &:hover {
+      transform: translateY(-10px) rotateX(2deg);
+      border-color: $primary-color;
+      box-shadow: 
+        0 15px 35px rgba(255, 152, 0, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.1);
+      animation: cardGlow 2s infinite;
+
+      .video-thumbnail {
+        transform: scale(1.05);
+      }
+
+      .purchase-button {
+        background: $gradient-2;
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+      }
+    }
+
+    .video-thumbnail {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 16px 16px 0 0;
+      transition: transform 0.4s ease;
+    }
+
+    mat-card-content {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+
+      h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: $text-color;
+        font-weight: 600;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .video-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid $border-color;
+
+        .duration {
+          display: flex;
+          align-items: center;
+          color: rgba(255, 255, 255, 0.7);
+
+          mat-icon {
+            font-size: 18px;
+            margin-right: 0.5rem;
+            color: $primary-color;
+          }
+        }
+
+        .price {
+          font-weight: bold;
+          color: $primary-color;
+          font-size: 1.1rem;
+          background: $gradient-2;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: priceGlow 2s infinite;
+        }
+      }
+    }
+
+    mat-card-actions {
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.2);
+
+      .purchase-button {
+        width: 100%;
+        background: $gradient-2;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+
+        &:hover::before {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+@keyframes cardGlow {
+  0%, 100% {
+    box-shadow: 
+      0 15px 35px rgba(255, 152, 0, 0.2),
+      0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 15px 35px rgba(255, 152, 0, 0.3),
+      0 5px 15px rgba(0, 0, 0, 0.1),
+      0 0 20px rgba(255, 152, 0, 0.2);
+  }
+}
+
+@keyframes textGlow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 152, 0, 0.8);
+  }
+}
+
+@keyframes priceGlow {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(255, 152, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(255, 152, 0, 0.6);
+  }
+} 

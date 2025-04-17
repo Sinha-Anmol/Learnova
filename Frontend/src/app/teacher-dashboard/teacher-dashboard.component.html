@@ -1,24 +1,11 @@
 <div class="teacher-dashboard">
   <div class="dashboard-header">
     <div class="header-content">
-      <div class="welcome-section">
-        <h1>Welcome, {{teacherName}}!</h1>
-        <p>Here's what's happening with your courses today</p>
-      </div>
       <div class="user-info">
-        <div class="user-avatar">
-          {{teacherName.charAt(0)}}
-        </div>
-        <span class="user-name">{{teacherName}}</span>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>more_vert</mat-icon>
+        <button mat-raised-button color="warn" (click)="logout()" class="logout-button">
+          <mat-icon>logout</mat-icon>
+          Logout
         </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-          </button>
-        </mat-menu>
       </div>
     </div>
   </div>

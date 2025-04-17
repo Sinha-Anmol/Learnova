@@ -326,3 +326,35 @@
     grid-template-columns: 1fr;
   }
 }
+
+::ng-deep {
+  .success-snackbar {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border-radius: 8px;
+    
+    .mat-simple-snackbar {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .mat-simple-snackbar-action {
+      color: white;
+    }
+  }
+
+  .error-snackbar {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
+    border-radius: 8px;
+    
+    .mat-simple-snackbar {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .mat-simple-snackbar-action {
+      color: white;
+    }
+  }
+}

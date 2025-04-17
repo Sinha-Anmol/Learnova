@@ -30,7 +30,7 @@ interface Course {
     MatIconModule
   ],
   templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss', './landingExtend.scss']
+  styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent implements OnInit {
   courses: Course[] = [];

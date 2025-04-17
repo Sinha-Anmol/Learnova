@@ -81,13 +81,20 @@ $text-light: #666666;
         }
 
         button {
-          color: #a0a0a0;
+          color: #020000;
           transition: color 0.3s ease;
 
           &:hover {
-            color: #4ecdc4;
+            color: #000000;
           }
         }
+      }
+
+      .logout-button {
+        background-color: #57cfc7;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
     }
   }

@@ -14,6 +14,7 @@ import { ContentListComponent } from './student-dashboard/content-list/content-l
 import { ContentViewComponent } from './student-dashboard/content-view/content-view.component';
 import { AnalysisSComponent } from './student-dashboard/analysis-s/analysis-s.component';
 import { CloudSupportComponent } from './teacher-dashboard/cloud-support/cloud-support.component';
+import { PremiumVideosComponent } from './student-dashboard/premium-videos/premium-videos.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -40,6 +41,8 @@ export const routes: Routes = [
   { path: 'content-list', component: ContentListComponent },
   { path: 'content/:id', component: ContentViewComponent },
   { path: 'student-dashboard/analysisS', component: AnalysisSComponent },
+  { path: 'student-dashboard/premium-courses', component: PremiumVideosComponent },
+  // { path: 'payment-success', loadComponent: () => import('./student-dashboard/payment-success.component').then(m => m.PaymentSuccessComponent) },
   {
     path: 'student-dashboard/content-view/:id',
     component: ContentViewComponent

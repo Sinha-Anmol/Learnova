@@ -205,8 +205,28 @@ export class TeacherDashboardComponent implements OnInit {
   }
 
   logout(): void {
-    // TODO: Implement logout logic
-    this.router.navigate(['/login']);
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.post('https://learnova-production.up.railway.app/api/auth/logout', {}, { headers })
+      .subscribe({
+        next: () => {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('email');
+          this.router.navigate(['/landing']);
+        },
+        error: (error) => {
+          console.error('Logout failed:', error);
+          this.snackBar.open('Logout failed. Please try again.', 'Close', { duration: 3000 });
+        }
+      });
   }
 
   scrollToFiles(): void {

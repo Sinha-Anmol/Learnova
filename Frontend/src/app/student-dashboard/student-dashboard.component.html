@@ -1,10 +1,19 @@
 <div class="dashboard-container">
-  <header class="dashboard-header">
+  <div class="dashboard-header">
     <div class="header-content">
-      <h1>Welcome Back!</h1>
+      <div class="user-info">
+        
+        <button mat-raised-button color="warn" (click)="logout()" class="logout-button">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+        <h1>Welcome Back!</h1>
       <p class="subtitle">Continue your learning journey</p>
+      </div>
     </div>
-  </header>
+  </div>
+
+
 
   <div class="analysis-section" (click)="navigateToAnalysis()">
     <div class="analysis-content">
@@ -18,6 +27,24 @@
         </div>
         <div class="icon-wrapper secondary">
           <mat-icon>trending_up</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="hover-effect"></div>
+  </div>
+
+  <div class="premium-section" (click)="navigateToPremium()">
+    <div class="premium-content">
+      <div class="premium-text">
+        <h2>Premium Courses</h2>
+        <p>Access exclusive content</p>
+      </div>
+      <div class="premium-icons">
+        <div class="icon-wrapper primary">
+          <mat-icon>star</mat-icon>
+        </div>
+        <div class="icon-wrapper secondary">
+          <mat-icon>play_circle</mat-icon>
         </div>
       </div>
     </div>

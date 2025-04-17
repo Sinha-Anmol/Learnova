@@ -9,6 +9,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../auth.service';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-signup',
@@ -29,12 +32,16 @@ import { AuthService } from '../auth.service';
 })
 export class SignupComponent {
   signupForm: FormGroup;
-  isLoading = false;
+  isLoading: boolean = false;
+  registrationSuccess: boolean = false;
   hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.signupForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -47,16 +54,34 @@ export class SignupComponent {
   onSubmit() {
     if (this.signupForm.valid) {
       this.isLoading = true;
-      this.authService.signup(this.signupForm.value).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          // Handle successful signup
-        },
-        error: (error) => {
-          this.isLoading = false;
-          // Handle error
-        }
-      });
+      const formData = this.signupForm.value;
+
+      this.http.post('https://learnova-production.up.railway.app/api/Auth/register', formData)
+        .subscribe({
+          next: (response: any) => {
+            this.isLoading = false;
+            this.registrationSuccess = true;
+            this.snackBar.open('Successfully Registered, Login to Continue', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['success-snackbar']
+            });
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 2000);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.registrationSuccess = false;
+            this.snackBar.open(error.error || 'Registration failed', 'Close', {
+              duration: 5000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar']
+            });
+          }
+        });
     }
   }
 }
