@@ -31,7 +31,7 @@
           <mat-label>Select Role</mat-label>
           <mat-select formControlName="role" required>
             <mat-option value="student">Student</mat-option>
-            <mat-option value="Teacher">Teacher</mat-option>
+            <mat-option value="teacher">Teacher</mat-option>
           </mat-select>
           <mat-icon matSuffix>person</mat-icon>
           <mat-error *ngIf="loginForm.get('role')?.hasError('required')">Please select a role</mat-error>

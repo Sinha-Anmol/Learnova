@@ -1,8 +1,9 @@
-// analysis-s.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 interface VideoProgress {
   videoId: number;
@@ -22,25 +23,41 @@ interface CompletedCourse {
 @Component({
   selector: 'app-analysis-s',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, MatCardModule],
   templateUrl: './analysis-s.component.html',
   styleUrls: ['./analysis-s.component.scss', './analysis-s2.component.scss']
 })
-export class AnalysisSComponent {
+export class AnalysisSComponent implements OnInit {
   domains = ['FullStack', 'Frontend', 'Backend', 'DevOps', 'QualityAssurance', 'Cloud'];
   levels = ['Beginner', 'Intermediate', 'Advanced'];
-  progressData: {[key: string]: VideoProgress} = {};
+  progressData: { [key: string]: VideoProgress } = {};
   completedCourses: CompletedCourse[] = [];
   showReports = false;
-  userId = 1;
+  userId: number = 0;
   selectedDomain: string | null = null;
   selectedLevel: string | null = null;
 
   constructor(private http: HttpClient) {}
 
+  ngOnInit() {
+    const email = localStorage.getItem('userEmail');
+    if (email) {
+      this.http.get<{ userId: number }>(
+        `https://learnova-production.up.railway.app/api/Analytics/GetUserIdByEmail?email=${encodeURIComponent(email)}`
+      ).subscribe({
+        next: (response) => {
+          this.userId = response.userId;
+        },
+        error: () => {
+          console.error('Failed to fetch userId from email');
+        }
+      });
+    }
+  }
+
   toggleReports() {
     this.showReports = !this.showReports;
-    if (this.showReports) {
+    if (this.showReports && this.userId > 0) {
       this.fetchCompletedCourses();
     }
   }
@@ -81,7 +98,7 @@ export class AnalysisSComponent {
 
   private fetchVideoProgress(domain: string, level: string, videoId: number) {
     const key = this.getStorageKey(domain, level);
-    
+
     this.http.get<any>(
       `https://learnova-production.up.railway.app/api/Analytics?userId=${this.userId}&videoId=${videoId}`
     ).subscribe(progress => {

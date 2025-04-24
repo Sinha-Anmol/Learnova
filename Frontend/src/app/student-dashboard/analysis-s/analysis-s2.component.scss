@@ -296,3 +296,51 @@ $gradient-2: linear-gradient(45deg, $primary-color, $secondary-color);
     }
   }
 }
+
+.learning-progress-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.learning-progress-layout.expanded-view {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.domain-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 350px;
+}
+
+.selected-detail-panel {
+  flex: 2;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 30px;
+  color: white;
+  animation: fadeIn 0.5s ease;
+}
+
+.progress-ring.large {
+  width: 120px;
+  height: 120px;
+  margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .learning-progress-layout {
+    flex-direction: column;
+  }
+
+  .domain-list {
+    max-width: 100%;
+  }
+
+  .selected-detail-panel {
+    width: 100%;
+  }
+}

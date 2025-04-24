@@ -6,7 +6,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { FooterComponent } from "../footer/footer.component";
 
 interface Course {
   id: number;
@@ -29,7 +28,7 @@ interface Course {
     MatChipsModule,
     RouterLink,
     MatIconModule,
-],
+  ],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
@@ -67,4 +66,6 @@ export class LandingComponent implements OnInit {
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
   }
+
+  
 }

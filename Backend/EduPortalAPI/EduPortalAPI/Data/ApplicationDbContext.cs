@@ -20,5 +20,7 @@ namespace EduPortalAPI.Data
         public DbSet<CompletedCourse> CompletedCourses { get; set; }
         public DbSet<AwsVideo> AwsVideos { get; set; }
         public DbSet<PremiumPayment> PremiumPayments { get; set; }
+        public DbSet<OtpRequest> OtpR { get; set; }
+        public DbSet<OtpVerify> OtpV { get; set; }
     }
 }

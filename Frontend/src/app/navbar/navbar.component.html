@@ -1,11 +1,41 @@
-<mat-toolbar color="primary">
+<mat-toolbar [style.background]="'linear-gradient(180deg, #1f3537 0%, #001110 100%)'">
   <div class="navbar-container">
-    <a routerLink="/" class="logo">
-      <span>Learnly</span>
-    </a>
-    <div class="nav-buttons">
-      <a mat-button routerLink="/login">Login</a>
-      <a mat-raised-button routerLink="/signup" color="accent">Sign up</a>
+    @if (isLandingPage()) {
+      <a routerLink="/" class="logo">
+        <mat-icon>school</mat-icon>
+        <span>Learnova</span>
+      </a>
+    } @else {
+      <div class="dashboard-left">
+        <button mat-icon-button (click)="goBack()" class="goBack">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        @if (isStudentPage()) {
+          <span class="dashboard-label">LEARNER DASHBOARD</span>
+        }
+        @else if (isTeacherPage()) {
+          <span class="dashboard-label">INSTRUCTOR DASHBOARD</span>
+        }
+      </div>
+    }
+
+    <div>
+      @if (isLandingPage()) {
+        <a mat-raised-button routerLink="/login" class="nav-buttons">Already have an account</a>
+      } 
+      @else if(isLoginPage()){}
+      @else if(isSignUpPage()){}
+      @else if (isStudentPage()) {
+        <button mat-raised-button (click)="logout()" class="logout-button">
+          Logout
+        </button>
+      }
+      @else if (isTeacherPage()) {
+        <button mat-raised-button (click)="logout()" class="logout-button">
+          Logout
+        </button>
+      }
     </div>
   </div>
 </mat-toolbar>

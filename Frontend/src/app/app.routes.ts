@@ -24,7 +24,7 @@ export const routes: Routes = [
     path: 'teacher',
     component: TeacherDashboardComponent,
     canActivate: [RoleGuard],
-    data: { role: 'Teacher' },
+    data: { role: 'teacher' },
   },
   { path: 'teacher/pdf-upload', component: PdfUploadComponent },
   { path: 'teacher/video-upload', component: VideoUploadComponent },

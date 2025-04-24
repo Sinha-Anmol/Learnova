@@ -1,12 +1,10 @@
-<!-- analysis-s.component.html -->
 <div class="analysis-container">
   <div class="analysis-top-bar">
     <div class="top-bar-content">
       <h2 class="analysis-board-title">
         <mat-icon>dashboard</mat-icon>
-        Analysis Board
+        Analysis Board 
       </h2>
-      
     </div>
   </div>
 
@@ -46,37 +44,62 @@
 
   <div class="dashboard">
     <h1>Your Learning Progress</h1>
-    
-    <div class="domains-container">
-      <div *ngFor="let domain of domains" class="domain-card">
-        <h2 (click)="selectedDomain = domain">{{domain}}</h2>
-        
-        <div class="levels-container" *ngIf="selectedDomain === domain">
-          <div *ngFor="let level of levels" 
-               class="level-progress"
-               (click)="selectDomainLevel(domain, level)">
-            
-            <div class="level-header">{{level}}</div>
-            
-            <div *ngIf="selectedLevel === level">
-              <div *ngIf="isEnrolled(domain, level); else notEnrolled" 
-                   class="progress-ring" 
-                   [style.--percentage]="getProgress(domain, level)"
-                   [style.--color]="getColor(getProgress(domain, level))">
-                <span class="percentage">{{getProgress(domain, level) | number:'1.0-0'}}%</span>
-              </div>
-              
-              <ng-template #notEnrolled>
-                <div class="not-enrolled">Not enrolled</div>
-              </ng-template>
-              
-              <div class="video-name" *ngIf="isEnrolled(domain, level)">
-                {{getVideoName(domain, level)}}
+
+    <div class="learning-progress-layout" [ngClass]="{ 'expanded-view': selectedDomain && selectedLevel }">
+      
+      <!-- Left stacked cards -->
+      <div class="domain-list">
+        <div *ngFor="let domain of domains" class="domain-card">
+          <!-- Toggle for selecting domain, to open or close -->
+          <h2 (click)="selectedDomain = (selectedDomain === domain ? null : domain)">
+            {{ domain }}
+          </h2>
+
+          <!-- Display the levels if the domain is selected -->
+          <div class="levels-container" *ngIf="selectedDomain === domain">
+            <div *ngFor="let level of levels" class="level-progress" (click)="selectDomainLevel(domain, level)">
+              <div class="level-header">{{ level }}</div>
+
+              <div *ngIf="selectedLevel === level && selectedDomain === domain">
+                <div *ngIf="isEnrolled(domain, level); else notEnrolled" 
+                    class="progress-ring"
+                    [style.--percentage]="getProgress(domain, level)"
+                    [style.--color]="getColor(getProgress(domain, level))">
+                  <span class="percentage">{{ getProgress(domain, level) | number:'1.0-0' }}%</span>
+                </div>
+
+                <ng-template #notEnrolled>
+                  <div class="not-enrolled">Not enrolled</div>
+                </ng-template>
+
+                <div class="video-name" *ngIf="isEnrolled(domain, level)">
+                  {{ getVideoName(domain, level) }}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Right detail panel -->
+      <div class="selected-detail-panel" *ngIf="selectedDomain && selectedLevel">
+        <h2>{{ selectedDomain }} - {{ selectedLevel }}</h2>
+        <div *ngIf="isEnrolled(selectedDomain, selectedLevel); else notEnrolledFull">
+          <div class="progress-ring large"
+              [style.--percentage]="getProgress(selectedDomain, selectedLevel)"
+              [style.--color]="getColor(getProgress(selectedDomain, selectedLevel))">
+            <span class="percentage">{{ getProgress(selectedDomain, selectedLevel) | number:'1.0-0' }}%</span>
+          </div>
+          <div class="video-name">
+            {{ getVideoName(selectedDomain, selectedLevel) }}
+          </div>
+        </div>
+        <ng-template #notEnrolledFull>
+          <div class="not-enrolled">Not enrolled in this level</div>
+        </ng-template>
+      </div>
+
     </div>
   </div>
+
 </div>
