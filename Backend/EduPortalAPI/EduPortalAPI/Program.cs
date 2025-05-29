@@ -15,7 +15,7 @@ builder.Configuration
 // Configure file upload limits
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.Limits.MaxRequestBodySize = 52428800; // 50 MB
+    serverOptions.Limits.MaxRequestBodySize = 209715200; // 200 MB
 });
 
 builder.WebHost.ConfigureKestrel(serverOptions =>

@@ -4,6 +4,7 @@ using EduPortalAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduPortalAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250514210608_FullCourse")]
+    partial class FullCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,7 +172,7 @@ namespace EduPortalAPI.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("EduPortalAPI.Models.LearnovaCourse", b =>
+            modelBuilder.Entity("EduPortalAPI.Models.FullCourse", b =>
                 {
                     b.Property<int>("CourseId")
                         .ValueGeneratedOnAdd()
@@ -184,15 +187,7 @@ namespace EduPortalAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Domain")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("KeyTopics")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Level")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -204,26 +199,18 @@ namespace EduPortalAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("CourseId");
 
-                    b.ToTable("LearnovaCourses");
+                    b.ToTable("FullCourses");
                 });
 
-            modelBuilder.Entity("EduPortalAPI.Models.LearnovaCourseVideo", b =>
+            modelBuilder.Entity("EduPortalAPI.Models.FullCourseFile", b =>
                 {
-                    b.Property<int>("VideoId")
+                    b.Property<int>("FileId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VideoId"));
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FileId"));
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
@@ -232,15 +219,22 @@ namespace EduPortalAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("VideoId");
+                    b.Property<DateTime>("UploadedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("FileId");
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("LearnovaCourseVideos");
+                    b.ToTable("FullCourseFiles");
                 });
 
             modelBuilder.Entity("EduPortalAPI.Models.Message", b =>
@@ -506,20 +500,20 @@ namespace EduPortalAPI.Migrations
                     b.ToTable("VideoAnalysis");
                 });
 
-            modelBuilder.Entity("EduPortalAPI.Models.LearnovaCourseVideo", b =>
+            modelBuilder.Entity("EduPortalAPI.Models.FullCourseFile", b =>
                 {
-                    b.HasOne("EduPortalAPI.Models.LearnovaCourse", "LearnovaCourse")
-                        .WithMany("Videos")
+                    b.HasOne("EduPortalAPI.Models.FullCourse", "Course")
+                        .WithMany("Files")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("LearnovaCourse");
+                    b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("EduPortalAPI.Models.LearnovaCourse", b =>
+            modelBuilder.Entity("EduPortalAPI.Models.FullCourse", b =>
                 {
-                    b.Navigation("Videos");
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }
