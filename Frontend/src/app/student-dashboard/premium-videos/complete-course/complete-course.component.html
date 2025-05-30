@@ -1,0 +1,73 @@
+<div class="course-layout" *ngIf="courseData">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="course-logo">
+        <mat-icon>school</mat-icon>
+      </div>
+      <div class="course-title">{{ courseData.title }}</div>
+    </div>
+    <nav class="sidebar-nav">
+      <!-- Module (was Topics/Grades) -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title collapsible" (click)="toggleSection('topics')">
+          <mat-icon class="collapse-arrow" [ngClass]="{'rotated': showTopics}">expand_more</mat-icon>
+          Module
+        </div>
+        <ul class="video-list" *ngIf="showTopics">
+          <li *ngFor="let video of courseData.videos; let i = index"
+              [class.selected]="selectedVideo?.videoId === video.videoId"
+              (click)="selectVideo(video)">
+            <mat-icon class="video-icon">play_circle</mat-icon>
+            <span class="video-label">{{ getVideoLabel(i) }}</span>
+          </li>
+        </ul>
+      </div>
+      <!-- Topics (new, for keyTopics) -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title collapsible" (click)="toggleSection('notes')">
+          <mat-icon class="collapse-arrow" [ngClass]="{'rotated': showNotes}">expand_more</mat-icon>
+          Topics
+        </div>
+        <div class="sidebar-section-content" *ngIf="showNotes">
+          <ul class="key-topics-ul">
+            <li *ngFor="let topic of getKeyTopics()">{{ topic }}</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Messages -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title collapsible" (click)="toggleSection('messages')">
+          <mat-icon class="collapse-arrow" [ngClass]="{'rotated': showMessages}">expand_more</mat-icon>
+          Messages
+        </div>
+        <div class="sidebar-section-content" *ngIf="showMessages">
+          <div class="empty-section">No messages available.</div>
+        </div>
+      </div>
+      <!-- Course Info -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title collapsible" (click)="toggleSection('courseInfo')">
+          <mat-icon class="collapse-arrow" [ngClass]="{'rotated': showCourseInfo}">expand_more</mat-icon>
+          Course Info
+        </div>
+        <div class="sidebar-section-content" *ngIf="showCourseInfo">
+          <p>{{ courseData.description }}</p>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="main-card">
+      <div class="video-player-section" *ngIf="selectedVideo">
+        <video width="100%" height="360" controls [src]="selectedVideo.fileUrl"></video>
+        <div class="video-details">
+          <h2>{{ selectedVideo ? getVideoLabel(getSelectedVideoIndex()) : '' }}</h2>
+          <p>Type: {{ selectedVideo.contentType }}</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

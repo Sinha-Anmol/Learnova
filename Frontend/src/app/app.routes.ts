@@ -15,6 +15,7 @@ import { ContentViewComponent } from './student-dashboard/content-view/content-v
 import { AnalysisSComponent } from './student-dashboard/analysis-s/analysis-s.component';
 import { CloudSupportComponent } from './teacher-dashboard/cloud-support/cloud-support.component';
 import { PremiumVideosComponent } from './student-dashboard/premium-videos/premium-videos.component';
+import { CompleteCourseComponent } from './student-dashboard/premium-videos/complete-course/complete-course.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -47,6 +48,7 @@ export const routes: Routes = [
     path: 'student-dashboard/content-view/:id',
     component: ContentViewComponent
   },
+  { path: 'student-dashboard/premium-videos/complete-course', component: CompleteCourseComponent },
   { path: '', redirectTo: 'student-dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '' }
 ];

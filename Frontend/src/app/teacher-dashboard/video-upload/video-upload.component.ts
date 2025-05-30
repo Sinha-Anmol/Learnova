@@ -70,7 +70,7 @@ export class VideoUploadComponent implements OnInit {
     const token = this.getLocalStorageItem('authToken');
     if (!token) return;
 
-    const apiUrl = `https://learnova-production.up.railway.app/api/Multimedia/user-files?email=${encodeURIComponent(userEmail)}`;
+    const apiUrl = `https://localhost:7030/api/Multimedia/user-files?email=${encodeURIComponent(userEmail)}`;
 
     this.http.get(apiUrl, { 
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) 
@@ -150,7 +150,7 @@ export class VideoUploadComponent implements OnInit {
     });
   
     this.isUploading = true;
-    this.http.post('https://learnova-production.up.railway.app/api/Multimedia/upload-video', formData, { headers }).subscribe({
+    this.http.post('https://localhost:7030/api/Multimedia/upload-video', formData, { headers }).subscribe({
       next: () => {
         this.snackBar.open('Video uploaded successfully!', 'Close', { duration: 3000 });
         this.resetForm();

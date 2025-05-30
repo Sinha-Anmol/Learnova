@@ -122,7 +122,7 @@ export class PdfUploadComponent implements OnInit {
     });
   
     this.isUploading = true;
-    this.http.post('https://learnova-production.up.railway.app/api/Multimedia/upload-pdf', formData, { headers }).subscribe({
+    this.http.post('https://localhost:7030/api/Multimedia/upload-pdf', formData, { headers }).subscribe({
       next: () => {
         this.snackBar.open('PDF uploaded successfully!', 'Close', { duration: 3000 });
         this.resetForm();
