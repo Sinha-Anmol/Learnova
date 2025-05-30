@@ -43,7 +43,7 @@ export class AnalysisSComponent implements OnInit {
     const email = localStorage.getItem('userEmail');
     if (email) {
       this.http.get<{ userId: number }>(
-        `https://learnova-production.up.railway.app/api/Analytics/GetUserIdByEmail?email=${encodeURIComponent(email)}`
+        `https://localhost:7030/api/Analytics/GetUserIdByEmail?email=${encodeURIComponent(email)}`
       ).subscribe({
         next: (response) => {
           this.userId = response.userId;
@@ -64,7 +64,7 @@ export class AnalysisSComponent implements OnInit {
 
   private fetchCompletedCourses() {
     this.http.get<CompletedCourse[]>(
-      `https://learnova-production.up.railway.app/api/Analytics/completed-courses/${this.userId}`
+      `https://localhost:7030/api/Analytics/completed-courses/${this.userId}`
     ).subscribe(courses => {
       this.completedCourses = courses;
     });
@@ -85,7 +85,7 @@ export class AnalysisSComponent implements OnInit {
     this.progressData[key] = { enrolled: false } as VideoProgress;
 
     this.http.get<any[]>(
-      `https://learnova-production.up.railway.app/api/Analytics/domain-files?domain=${domain}&level=${level}`
+      `https://localhost:7030/api/Analytics/domain-files?domain=${domain}&level=${level}`
     ).subscribe({
       next: (videos) => {
         if (videos.length > 0) {
@@ -100,7 +100,7 @@ export class AnalysisSComponent implements OnInit {
     const key = this.getStorageKey(domain, level);
 
     this.http.get<any>(
-      `https://learnova-production.up.railway.app/api/Analytics?userId=${this.userId}&videoId=${videoId}`
+      `https://localhost:7030/api/Analytics?userId=${this.userId}&videoId=${videoId}`
     ).subscribe(progress => {
       this.progressData[key] = {
         videoId,

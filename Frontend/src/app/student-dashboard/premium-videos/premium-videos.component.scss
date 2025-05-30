@@ -1,3 +1,9 @@
+body, .premium-videos-container, .search-section, .search-field, .error-message {
+  font-family: 'Inter', 'Roboto', 'Segoe UI', 'Arial', sans-serif;
+  background: #fff !important;
+  color: #111 !important;
+}
+
 $primary-color: #FF9800;
 $secondary-color: #F57C00;
 $background-color: #1a1a1a;
@@ -11,9 +17,9 @@ $gradient-2: linear-gradient(45deg, $primary-color, $secondary-color);
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  background: $gradient-1;
+  background: #fff;
   min-height: 100vh;
-  color: $text-color;
+  color: #111;
 
   h1 {
     font-size: 2.5rem;
@@ -159,6 +165,40 @@ $gradient-2: linear-gradient(45deg, $primary-color, $secondary-color);
       }
     }
   }
+}
+
+.search-section {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0e0e0;
+
+  .search-field {
+    width: 100%;
+    ::ng-deep .mat-form-field-outline {
+      color: #e0e0e0;
+    }
+    ::ng-deep .mat-form-field-label {
+      color: #444;
+    }
+    input {
+      font-size: 1.1rem;
+      color: #111;
+    }
+    .mat-icon-button {
+      color: #222;
+    }
+  }
+}
+
+.error-message {
+  color: #d32f2f;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 @keyframes cardGlow {

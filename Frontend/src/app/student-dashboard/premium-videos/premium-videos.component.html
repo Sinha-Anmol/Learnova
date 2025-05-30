@@ -1,26 +1,12 @@
 <div class="premium-videos-container">
-  <h1>Premium Video Courses</h1>
-  <p class="subtitle">Access exclusive educational content from top instructors</p>
-
-  <div class="videos-grid">
-    <mat-card *ngFor="let video of premiumVideos" class="video-card">
-      <img [src]="video.thumbnail" [alt]="video.title" class="video-thumbnail">
-      <mat-card-content>
-        <h2>{{video.title}}</h2>
-        <p>{{video.description}}</p>
-        <div class="video-details">
-          <span class="duration">
-            <mat-icon>schedule</mat-icon>
-            {{video.duration}}
-          </span>
-          <span class="price">{{video.price}}</span>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="purchaseVideo(video)">
-          Purchase Now
-        </button>
-      </mat-card-actions>
-    </mat-card>
+  <div class="search-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Enter Course UID</mat-label>
+      <input matInput [(ngModel)]="courseUid" placeholder="Enter Course UID">
+      <button mat-icon-button matSuffix (click)="searchCourse()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
   </div>
 </div> 

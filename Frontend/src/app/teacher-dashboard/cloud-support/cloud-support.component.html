@@ -1,41 +1,72 @@
 <div class="cloud-upload-container">
-  <div class="upload-card-container">
-    <mat-card class="upload-trigger-card" (click)="toggleUploadForm()">
-      <div class="card-content">
-        <mat-icon class="card-icon">cloud_upload</mat-icon>
-        <h2>Upload Video</h2>
-        <p>Click to upload a new video</p>
+  <div class="upload-header">
+    <div class="header-content">
+      <h1>Create Your Course</h1>
+      <p>Upload your educational videos and create comprehensive courses for students</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <mat-icon>video_library</mat-icon>
+        <span>{{totalVideos}} Videos</span>
       </div>
-    </mat-card>
+      <div class="stat-item">
+        <mat-icon>school</mat-icon>
+        <span>{{totalStudents}} Students</span>
+      </div>
+      <div class="stat-item">
+        <mat-icon>stars</mat-icon>
+        <span>{{averageRating}} Rating</span>
+      </div>
+    </div>
+  </div>
 
-    <div class="upload-form-container" *ngIf="showUploadForm">
-      <mat-card class="upload-card">
-        <mat-card-header>
-          <mat-card-title>Upload Video to Cloud</mat-card-title>
-          <mat-card-subtitle>Fill in the details and select your video file</mat-card-subtitle>
-        </mat-card-header>
+  <div class="upload-content">
+    <div class="upload-section">
+      <div class="upload-card" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+        <div class="upload-icon">
+          <mat-icon>cloud_upload</mat-icon>
+        </div>
+        <h3>Drag & Drop Your Videos</h3>
+        <p>or</p>
+        <button mat-stroked-button class="browse-button" (click)="fileInput.click()">
+          <mat-icon>folder_open</mat-icon>
+          Browse Files
+        </button>
+        <input #fileInput type="file" hidden accept="video/*" multiple (change)="onFileSelected($event)">
+        <p class="file-info">Supported formats: MP4, WebM, MOV</p>
+      </div>
 
-        <mat-card-content>
-          <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Title</mat-label>
-              <input matInput formControlName="title" placeholder="Enter video title" class="white-text">
-              <mat-error *ngIf="uploadForm.get('title')?.hasError('required')">
-                Title is required
-              </mat-error>
-            </mat-form-field>
+      <div class="upload-form" *ngIf="selectedFiles.length > 0">
+        <h2>Course Details</h2>
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+          <mat-form-field>
+            <mat-label>Course Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter course title">
+            <mat-error *ngIf="uploadForm.get('title')?.hasError('required')">
+              Title is required
+            </mat-error>
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description" placeholder="Enter video description" rows="3" class="white-text"></textarea>
-              <mat-error *ngIf="uploadForm.get('description')?.hasError('required')">
-                Description is required
-              </mat-error>
-            </mat-form-field>
+          <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3" placeholder="Describe your course content"></textarea>
+            <mat-error *ngIf="uploadForm.get('description')?.hasError('required')">
+              Description is required
+            </mat-error>
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field>
+            <mat-label>Key Topics</mat-label>
+            <textarea matInput formControlName="keyTopics" rows="3" placeholder="Enter key topics covered in the course"></textarea>
+            <mat-error *ngIf="uploadForm.get('keyTopics')?.hasError('required')">
+              Key topics are required
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field>
               <mat-label>Domain</mat-label>
-              <mat-select formControlName="domain" class="white-text">
+              <mat-select formControlName="domain">
                 <mat-option *ngFor="let domain of domainOptions" [value]="domain">
                   {{domain}}
                 </mat-option>
@@ -45,43 +76,69 @@
               </mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field>
               <mat-label>Level</mat-label>
-              <mat-select formControlName="level" class="white-text">
-                <mat-option value="beginner">Beginner</mat-option>
-                <mat-option value="intermediate">Intermediate</mat-option>
-                <mat-option value="advanced">Advanced</mat-option>
+              <mat-select formControlName="level">
+                <mat-option *ngFor="let level of levelOptions" [value]="level">
+                  {{level}}
+                </mat-option>
               </mat-select>
               <mat-error *ngIf="uploadForm.get('level')?.hasError('required')">
                 Level is required
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <div class="file-upload-container">
-              <input type="file" (change)="onFileSelected($event)" accept="video/*" #fileInput style="display: none">
-              <button type="button" mat-stroked-button color="primary" (click)="fileInput.click()">
-                <mat-icon>cloud_upload</mat-icon>
-                Choose Video File
-              </button>
-              <span class="file-name" *ngIf="selectedFile">
-                {{ selectedFile.name }}
-              </span>
+          <div class="selected-files">
+            <h3>Selected Videos</h3>
+            <div class="file-list">
+              <div class="file-item" *ngFor="let file of selectedFiles">
+                <mat-icon>video_file</mat-icon>
+                <span class="file-name">{{ file.name }}</span>
+                <button mat-icon-button color="warn" (click)="removeFile(file)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
             </div>
+          </div>
 
-            <div class="button-container">
-              <button mat-raised-button color="primary" type="submit" [disabled]="!uploadForm.valid || !selectedFile || isLoading">
-                <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-                <span *ngIf="!isLoading">Upload Video</span>
-              </button>
-            </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="cancelUpload()">
+              Cancel
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!uploadForm.valid || isLoading">
+              <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+              <span *ngIf="!isLoading">Upload Course</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <div class="success-message" *ngIf="uploadSuccess">
-    <mat-icon>check_circle</mat-icon>
-    <span>Video Uploaded Successfully</span>
+    <div class="tips-section">
+      <h2>Tips for Creating Great Courses</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <mat-icon>timer</mat-icon>
+          <h3>Structured Content</h3>
+          <p>Organize your videos in a logical sequence for better learning flow</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>record_voice_over</mat-icon>
+          <h3>Clear Audio</h3>
+          <p>Ensure good sound quality and speak clearly to maintain student attention</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>visibility</mat-icon>
+          <h3>Visual Quality</h3>
+          <p>Use high-quality visuals and maintain good lighting for better understanding</p>
+        </div>
+        <div class="tip-card">
+          <mat-icon>groups</mat-icon>
+          <h3>Engage Students</h3>
+          <p>Create interactive content that keeps students engaged and motivated to learn</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -57,7 +57,7 @@ export class SignupComponent {
       this.isLoading = true;
       const formData = this.signupForm.value;
 
-      this.http.post('https://learnova-production.up.railway.app/api/Auth/register', formData)
+      this.http.post('https://localhost:7030/api/Auth/register', formData)
         .subscribe({
           next: (response: any) => {
             this.isLoading = false;

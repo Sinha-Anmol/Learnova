@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://learnova-production.up.railway.app'
+  apiUrl: 'https://localhost:7030'
 }; 

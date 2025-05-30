@@ -45,7 +45,7 @@ export class LandingComponent implements OnInit {
   }
 
   fetchCourses() {
-    this.http.get<Course[]>('https://learnova-production.up.railway.app/api/Multimedia/all-files')
+    this.http.get<Course[]>('https://localhost:7030/api/Multimedia/all-files')
       .subscribe(courses => {
         this.courses = courses;
         this.categories = ['All', ...new Set(courses.map(course => course.domain))];

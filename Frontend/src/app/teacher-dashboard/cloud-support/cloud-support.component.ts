@@ -31,11 +31,14 @@ import { CommonModule } from '@angular/common';
 })
 export class CloudSupportComponent implements OnInit {
   uploadForm: FormGroup;
-  selectedFile: File | null = null;
-  userId: string = '';
+  selectedFiles: File[] = [];
   isLoading: boolean = false;
-  showUploadForm: boolean = false;
-  uploadSuccess: boolean = false;
+  isDragging: boolean = false;
+
+  // Stats properties
+  totalVideos: number = 0;
+  totalStudents: number = 0;
+  averageRating: number = 0;
 
   domainOptions = [
     'FullStack',
@@ -46,6 +49,12 @@ export class CloudSupportComponent implements OnInit {
     'Cloud'
   ];
 
+  levelOptions = [
+    'Beginner',
+    'Intermediate',
+    'Advanced'
+  ];
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -54,81 +63,136 @@ export class CloudSupportComponent implements OnInit {
     this.uploadForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
+      keyTopics: ['', Validators.required],
       domain: ['', Validators.required],
       level: ['', Validators.required]
     });
   }
 
   ngOnInit() {
-    this.getUserId();
+    this.loadStats();
   }
 
-  getUserId() {
-    const userEmail = localStorage.getItem('userEmail');
-    if (!userEmail) {
-      this.snackBar.open('User email not found', 'Close', { duration: 3000 });
-      return;
-    }
-
+  loadStats() {
     const token = localStorage.getItem('authToken');
-    this.http.get(`https://learnova-production.up.railway.app/api/Analytics/GetUserIdByEmail?email=${encodeURIComponent(userEmail)}`, {
+    this.http.get('https://localhost:7030/api/Analytics/GetTeacherStats', {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
     }).subscribe({
       next: (response: any) => {
-        this.userId = response.userId.toString();
+        this.totalVideos = response.totalVideos || 0;
+        this.totalStudents = response.totalStudents || 0;
+        this.averageRating = response.averageRating || 0;
       },
       error: (err) => {
-        console.error('Error fetching user ID:', err);
-        this.snackBar.open('Failed to fetch user ID', 'Close', { duration: 3000 });
+        console.error('Error loading stats:', err);
       }
     });
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
   }
 
-  toggleUploadForm() {
-    this.showUploadForm = !this.showUploadForm;
-    if (!this.showUploadForm) {
-      this.uploadForm.reset();
-      this.selectedFile = null;
-      this.uploadSuccess = false;
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+
+    const files = event.dataTransfer?.files;
+    if (files) {
+      this.handleFiles(files);
     }
   }
 
+  onFileSelected(event: any) {
+    const files = event.target.files;
+    if (files) {
+      this.handleFiles(files);
+    }
+  }
+
+  private handleFiles(files: FileList) {
+    const videoFiles = Array.from(files).filter(file => 
+      file.type.startsWith('video/') && 
+      ['video/mp4', 'video/webm', 'video/quicktime'].includes(file.type)
+    );
+
+    if (videoFiles.length === 0) {
+      this.snackBar.open('Please select valid video files (MP4, WebM, or MOV)', 'Close', { 
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+      return;
+    }
+
+    this.selectedFiles = [...this.selectedFiles, ...videoFiles];
+  }
+
+  removeFile(file: File) {
+    this.selectedFiles = this.selectedFiles.filter(f => f !== file);
+  }
+
+  cancelUpload() {
+    this.selectedFiles = [];
+    this.uploadForm.reset();
+  }
+
   onSubmit() {
-    if (!this.selectedFile || !this.uploadForm.valid || !this.userId) {
-      this.snackBar.open('Please fill all required fields and select a file', 'Close', { duration: 3000 });
+    if (this.selectedFiles.length === 0 || !this.uploadForm.valid) {
+      this.snackBar.open('Please fill all required fields and select at least one file', 'Close', { 
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
       return;
     }
 
     this.isLoading = true;
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    
+    // Append course details
     formData.append('title', this.uploadForm.get('title')?.value);
     formData.append('description', this.uploadForm.get('description')?.value);
-    formData.append('userId', this.userId);
+    formData.append('keyTopics', this.uploadForm.get('keyTopics')?.value);
     formData.append('domain', this.uploadForm.get('domain')?.value);
     formData.append('level', this.uploadForm.get('level')?.value);
+    formData.append('teacherEmail', localStorage.getItem('userEmail') || '');
+
+    // Append all selected files
+    this.selectedFiles.forEach(file => {
+      formData.append('files', file);
+    });
 
     const token = localStorage.getItem('authToken');
-    this.http.post('https://learnova-production.up.railway.app/api/Aws/upload', formData, {
+    this.http.post('https://localhost:7030/api/LearnovaCourses/upload', formData, {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
     }).subscribe({
-      next: (response) => {
-        this.uploadSuccess = true;
-        this.snackBar.open('Video Uploaded Successfully', 'Close', { duration: 3000 });
+      next: (response: any) => {
+        this.snackBar.open('Course Uploaded Successfully', 'Close', { 
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
         this.uploadForm.reset();
-        this.selectedFile = null;
-        setTimeout(() => {
-          this.showUploadForm = false;
-          this.uploadSuccess = false;
-        }, 3000);
+        this.selectedFiles = [];
+        this.loadStats(); // Reload stats after successful upload
       },
       error: (err) => {
-        console.error('Error uploading file:', err);
-        this.snackBar.open('Failed to upload file', 'Close', { duration: 3000 });
+        console.error('Error uploading course:', err);
+        this.snackBar.open('Failed to upload course', 'Close', { 
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
       },
       complete: () => {
         this.isLoading = false;
