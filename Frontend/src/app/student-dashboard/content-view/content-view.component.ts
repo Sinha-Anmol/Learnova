@@ -66,19 +66,19 @@ export class ContentViewComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = false;
 
-    this.http.get<ContentItem>(`https://learnova-production.up.railway.app/api/Multimedia/file-by-id/${id}`)
+    this.http.get<ContentItem>(`https://localhost:7030/api/Multimedia/file-by-id/${id}`)
       .subscribe({
         next: (content) => {
           this.content = content;
           if (content.fileType.startsWith('application/pdf')) {
-            this.http.get(`https://learnova-production.up.railway.app/api/Multimedia/download/${content.id}`, {
+            this.http.get(`https://localhost:7030/api/Multimedia/download/${content.id}`, {
               responseType: 'blob'
             }).subscribe(blob => {
               this.contentUrl = URL.createObjectURL(blob);
               this.loading = false;
             }, error => this.handleError(error));
           } else {
-            this.contentUrl = `https://learnova-production.up.railway.app/api/Multimedia/download/${content.id}`;
+            this.contentUrl = `https://localhost:7030/api/Multimedia/download/${content.id}`;
             this.loading = false;
             if (isPlatformBrowser(this.platformId)) {
               this.initializeTracking();

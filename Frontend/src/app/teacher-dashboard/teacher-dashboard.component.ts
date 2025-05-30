@@ -102,7 +102,7 @@ export class TeacherDashboardComponent implements OnInit {
     }
 
     const token = localStorage.getItem('authToken');
-    const apiUrl = `https://learnova-production.up.railway.app/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
+    const apiUrl = `https://localhost:7030/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
 
     this.http.get(apiUrl, { 
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) 
@@ -128,7 +128,7 @@ export class TeacherDashboardComponent implements OnInit {
       return;
     }
 
-    let apiUrl = `https://learnova-production.up.railway.app/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
+    let apiUrl = `https://localhost:7030/api/Multimedia/user-files?email=${encodeURIComponent(this.userEmail)}`;
     
     if (this.selectedDomain) {
       apiUrl += `&domain=${this.selectedDomain}`;
@@ -215,7 +215,7 @@ export class TeacherDashboardComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.post('https://learnova-production.up.railway.app/api/auth/logout', {}, { headers })
+    this.http.post('https://localhost:7030/api/auth/logout', {}, { headers })
       .subscribe({
         next: () => {
           localStorage.removeItem('authToken');

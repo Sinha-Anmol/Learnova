@@ -7,7 +7,7 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private readonly apiUrl = 'https://learnova-production.up.railway.app/api/Analytics';
+  private readonly apiUrl = 'https://localhost:7030/api/Analytics';
 
   constructor(
     private http: HttpClient,

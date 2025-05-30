@@ -43,7 +43,7 @@ export class FileListComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<FileItem[]>('https://learnova-production.up.railway.app/api/Multimedia/my-files', { headers }).subscribe({
+    this.http.get<FileItem[]>('https://localhost:7030/api/Multimedia/my-files', { headers }).subscribe({
       next: (files) => {
         this.dataSource = files.map(file => ({
           ...file,
@@ -67,7 +67,7 @@ export class FileListComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    window.open(`https://learnova-production.up.railway.app/api/Multimedia/download/${id}`, '_blank');
+    window.open(`https://localhost:7030/api/Multimedia/download/${id}`, '_blank');
   }
 
   getFileIcon(type: string): string {

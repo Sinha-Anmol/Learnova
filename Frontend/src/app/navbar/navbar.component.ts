@@ -46,7 +46,7 @@ export class NavbarComponent {
 
     logout() {
       const token = localStorage.getItem('authToken');
-      this.http.post('https://learnova-production.up.railway.app/api/auth/logout', {}, {
+      this.http.post('https://localhost:7030/api/auth/logout', {}, {
         headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
       }).subscribe({
         next: () => {

@@ -18,10 +18,10 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
     serverOptions.Limits.MaxRequestBodySize = 209715200; // 200 MB
 });
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(8080); // Listen on port 8080
-});
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    serverOptions.ListenAnyIP(8080); // Listen on port 8080
+//});
 
 // Add SQL Server Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
